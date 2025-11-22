@@ -1,4 +1,34 @@
 name: MatchBox
 version: '1.0-SNAPSHOT'
-main: me.tyAlternative.matchBox.MatchBox
+main: me.tyalternative.matchbox.MatchBox
 api-version: '1.21'
+authors: [TyAlternative]
+description: Un jeu de rôle de manipulation sur Minecraft
+
+depend:
+  - SkinsRestorer
+
+
+commands:
+  matchbox:
+    description: Commande principale du jeu
+    usage: /matchbox <start|stop|skip|role|debug>
+    aliases: [mb, box]
+
+  compo:
+    description: Ouvre le GUI de composition des rôles
+    usage: /compo [display|reset]
+    aliases: [composition]
+
+permissions:
+  matchbox.admin:
+    description: Accès aux commandes administrateur
+    default: op
+
+  matchbox.play:
+    description: Permet de jouer
+    default: true
+
+  matchbox.composition:
+    description: Permet de modifier la composition
+    default: op

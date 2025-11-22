@@ -1,0 +1,157 @@
+# ========================================
+# Configuration de MatchBox
+# ========================================
+
+# Paramètres généraux
+general:
+  # Langue (fr, en)
+  language: fr
+
+  # Activer les messages de debug
+  debug: true
+
+  # Monde où se déroule la partie
+  world: world
+
+# Phases de jeu
+phases:
+  gameplay:
+    # Durée en secondes (entre 300 et 600 = 5 à 10 minutes)
+    duration: 360
+    min_duration: 300
+    max_duration: 600
+
+  vote:
+    # Durée en secondes
+    duration: 120
+
+    # Temps de discussion avant le vote (en secondes)
+    discussion_time: 60
+
+# Mécaniques de jeu
+mechanics:
+  # Flèches spectrales
+  spectral_arrows:
+    # Nombre de flèches par défaut par joueur
+    default_count: 1
+
+    # Durée de révélation du nom (en secondes, -1 = permanent)
+    reveal_duration: -1
+
+  # Panneaux
+  signs:
+    # Nombre de panneaux par défaut
+    default_count: 16
+
+    # Recharger les panneaux à chaque phase
+    refill_each_phase: true
+
+  # Anonymat
+  anonymity:
+    # Masquer les skins pendant la phase de gameplay
+    hide_skins: true
+
+    # Masquer les nametags pendant la phase de gameplay
+    hide_nametags: true
+
+    # Skin par défaut (steve, alex)
+    default_skin: steve
+
+  # Vote
+  vote:
+    # Portée d'interaction pour voter (en blocs)
+    interaction_range: 100.0
+
+    # Afficher le nombre de votes en temps réel
+    show_vote_count: false
+
+    # En cas d'égalité, éliminer aléatoirement parmi les égaux
+    random_on_tie: true
+
+  # Élimination
+  elimination:
+    # Révéler le rôle des joueurs éliminés
+    reveal_role_on_death: false
+
+    # Téléporter les spectateurs à un point précis
+    teleport_spectators: false
+    spectator_location:
+      x: 0
+      y: 100
+      z: 0
+
+# Positions des tables de vote
+# Format: x, y, z
+vote_tables:
+  - "0, 64, 0"
+  - "10, 64, 0"
+  - "20, 64, 0"
+  - "30, 64, 0"
+  - "40, 64, 0"
+  - "50, 64, 0"
+  - "60, 64, 0"
+  - "70, 64, 0"
+
+# Cooldowns des capacités (en secondes)
+cooldowns:
+  poudre_cheminee: 20
+  rayonnement_toggle: 0
+  flamme_jumelle: 120
+  flamme_jumelle_duration: 5
+
+# Composition par défaut
+default_composition:
+  ETINCELLE: 1
+  BATON: 7
+
+# Messages personnalisés (optionnel, sinon utilise les messages par défaut)
+messages:
+  prefix: "§e[Boite d'Allumettes]"
+
+  game:
+    start: "§7La partie commence !"
+    end: "§7La partie est terminée !"
+
+  phase:
+    gameplay_start: "§7Début de la phase de §bGameplay§7 !"
+    gameplay_end: "§7Fin de la phase de §bGameplay§7 !"
+    vote_start: "§7Début de la phase de §dVote§7 !"
+    vote_end: "§7Fin de la phase de §dVote§7 !"
+
+  elimination:
+    by_embrasement: "§e{player} §7a été éliminé par §cEmbrasement§7 !"
+    by_vote: "§e{player} §7a été éliminé par §dVote§7 !"
+
+  victory:
+    flammes_eliminated: "§7Toutes les §cFlammes§7 ont été éliminées ! Les §eBâtons§7 gagnent !"
+    last_flamme: "§7La dernière §cFlamme§7 remporte la partie !"
+
+# UI
+ui:
+  # Afficher la bossbar avec le temps restant
+  bossbar:
+    enabled: true
+    color_gameplay: BLUE
+    color_vote: PINK
+
+  # Afficher les cooldowns dans l'actionbar
+  actionbar:
+    enabled: true
+    show_cooldowns: true
+
+  # Sons
+  sounds:
+    enabled: true
+    phase_change: ENTITY_PLAYER_LEVELUP
+    elimination: ENTITY_LIGHTNING_BOLT_THUNDER
+    ability_used: BLOCK_NOTE_BLOCK_PLING
+    ability_ready: BLOCK_NOTE_BLOCK_CHIME
+    vote_cast: ENTITY_EXPERIENCE_ORB_PICKUP
+
+# Performance
+performance:
+  # Intervalle de mise à jour des displays (en ticks)
+  display_update_interval: 20
+
+  # Intervalle de vérification des cooldowns (en ticks)
+  cooldown_check_interval: 10

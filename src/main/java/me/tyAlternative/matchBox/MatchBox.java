@@ -1,4 +1,4 @@
-package me.tyAlternative.matchBox;
+package me.tyalternative.matchbox;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
