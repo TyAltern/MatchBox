@@ -1,0 +1,4 @@
+name: MatchBox
+version: '1.0-SNAPSHOT'
+main: me.tyAlternative.matchBox.MatchBox
+api-version: '1.21'
