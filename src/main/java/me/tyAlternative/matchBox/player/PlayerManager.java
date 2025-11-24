@@ -1,6 +1,7 @@
 package me.tyalternative.matchbox.player;
 
 import me.tyalternative.matchbox.MatchBox;
+import me.tyalternative.matchbox.role.RoleType;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -22,54 +23,60 @@ public class PlayerManager {
 
     // ========== GESTION DES DONNÉES ==========
 
-    public PlayerData getOrCreateData(Player player) {
+    public PlayerData getOrCreate(Player player) {
         return players.computeIfAbsent(player.getUniqueId(), PlayerData::new);
     }
 
-    public PlayerData getData(Player player) {
+    public PlayerData get(Player player) {
         return players.get(player.getUniqueId());
     }
 
-    public PlayerData getData(UUID uuid) {
+    public PlayerData get(UUID uuid) {
         return players.get(uuid);
     }
 
-    public boolean hasData(Player player) {
+    public boolean has(Player player) {
         return players.containsKey(player.getUniqueId());
     }
 
-    public void removeData (Player player) {
+    public void remove(Player player) {
         players.remove(player.getUniqueId());
     }
 
 
     // ========== COLLECTIONS ==========
 
-    public Collection<PlayerData> getAllPlayers() {
+    public Collection<PlayerData> getAll() {
         return new ArrayList<>(players.values());
     }
 
-    public List<PlayerData> getPlayersInState(PlayerState state) {
+    public List<PlayerData> getByState(PlayerState state) {
         return players.values().stream()
                 .filter(data -> data.getState() == state)
                 .collect(Collectors.toList());
     }
 
-    public List<PlayerData> getAlivePlayers() {
+    public List<PlayerData> getAlive() {
         return players.values().stream()
                 .filter(data -> data.isAlive())
                 .collect(Collectors.toList());
     }
 
-    public List<Player> getAlivePlayerEntities() {
-        return getAlivePlayers().stream()
+    public List<Player> getAlivePlayer() {
+        return getAlive().stream()
                 .map(PlayerData::getPlayer)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
-    public List<PlayerData> getDeadPlayers() {
-        return getPlayersInState(PlayerState.DEAD);
+    public List<PlayerData> getByType(RoleType type) {
+        return players.values().stream()
+                .filter(data -> data.hasRole() && data.getRole().getTeam() == type)
+                .collect(Collectors.toList());
+    }
+
+    public List<PlayerData> getDead() {
+        return getByState(PlayerState.DEAD);
     }
 
 

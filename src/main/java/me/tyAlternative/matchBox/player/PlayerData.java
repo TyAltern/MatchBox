@@ -60,12 +60,19 @@ public class PlayerData {
         return state.isAlive();
     }
 
+
+    // ========== RÔLE ==========
+
     public Role getRole() {
         return role;
     }
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public boolean hasRole() {
+        return role != null;
     }
 
 

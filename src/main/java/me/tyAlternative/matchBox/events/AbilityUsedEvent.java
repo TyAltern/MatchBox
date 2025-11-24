@@ -1,0 +1,49 @@
+package me.tyalternative.matchbox.events;
+
+import me.tyalternative.matchbox.role.abilities.Ability;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
+
+public class AbilityUsedEvent extends Event implements Cancellable {
+
+    private static final HandlerList HANDLERS = new HandlerList();
+    private final Player player;
+    private final Ability ability;
+    private boolean cancelled;
+
+    public AbilityUsedEvent(Player player, Ability ability) {
+        this.player = player;
+        this.ability = ability;
+        this.cancelled = false;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public Ability getAbility() {
+        return ability;
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    @Override
+    public void setCancelled(boolean cancel) {
+        this.cancelled = cancel;
+    }
+
+    @Override
+    public @NotNull HandlerList getHandlers() {
+        return HANDLERS;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+}

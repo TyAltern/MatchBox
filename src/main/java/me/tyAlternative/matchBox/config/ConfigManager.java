@@ -7,133 +7,80 @@ import org.bukkit.configuration.file.FileConfiguration;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
- * Gestionnaire de configuration centralisé
+ * Gestionnaire de configuration
+ * Charge les paramètres et les expose via GameSettings
  */
 public class ConfigManager {
 
     private final MatchBox plugin;
-    private final FileConfiguration config;
+    private final GameSettings settings;
 
     public ConfigManager(MatchBox plugin) {
         this.plugin = plugin;
-        this.config = plugin.getConfig();
+        this.settings = new GameSettings();
+        loadSettings();
     }
 
+    /**
+     * Charge tous les paramètres depuis config.yml
+     */
+    public void loadSettings() {
+        FileConfiguration config = plugin.getConfig();
 
+        // Général
+        settings.setLanguage(config.getString("general.language", "fr"));
+        settings.setDebug(config.getBoolean("general.debug", false));
+        settings.setWorldName(config.getString("general.world", "world"));
 
-    // ========== GÉNÉRAL ==========
+        // Phases
+        settings.setGameplayDuration(config.getInt("phases.gameplay.duration", 360));
+        settings.setMinGameplayDuration(config.getInt("phases.gameplay.min_duration", 300));
+        settings.setMaxGameplayDuration(config.getInt("phases.gameplay.max_duration", 600));
+        settings.setVoteDuration(config.getInt("phases.vote.duration", 120));
+        settings.setDiscussionTime(config.getInt("phases.vote.discussion_time", 60));
 
-    public boolean isDebugEnabled() {
-        return config.getBoolean("general.debug", false);
-    }
+        // Mécaniques - Flèches
+        settings.setDefaultSpectralArrows(config.getInt("mechanics.spectral_arrows.default_count", 1));
+        settings.setRevealDuration(config.getInt("mechanics.spectral_arrows.reveal_duration", -1));
 
-    public String getLanguage() {
-        return config.getString("general.language", "fr");
-    }
+        // Mécaniques - Panneaux
+        settings.setDefaultSignCount(config.getInt("mechanics.signs.default_count", 16));
+        settings.setRefillSigns(config.getBoolean("mechanics.signs.refill_each_phase", true));
 
-    public String getWorldName() {
-        return config.getString("general.world", "world");
-    }
+        // Mécaniques - Anonymat
+        settings.setHideSkins(config.getBoolean("mechanics.anonymity.hide_skins", true));
+        settings.setHideNametags(config.getBoolean("mechanics.anonymity.hide_nametags", true));
+        settings.setDefaultSkin(config.getString("mechanics.anonymity.default_skin", "steve"));
 
+        // Mécaniques - Vote
+        settings.setVoteInteractionRange(config.getDouble("mechanics.vote.interaction_range", 100.0));
+        settings.setShowVoteCount(config.getBoolean("mechanics.vote.show_vote_count", false));
+        settings.setRandomOnTie(config.getBoolean("mechanics.vote.random_on_tie", true));
 
-    // ========== PHASES ==========
+        // Mécaniques - Élimination
+        settings.setRevealRoleOnDeath(config.getBoolean("mechanics.elimination.reveal_role_on_death", false));
+        settings.setTeleportSpectators(config.getBoolean("mechanics.elimination.teleport_spectators", false));
 
-    public int getGameplayDuration() {
-        return config.getInt("phases.gameplay.duration", 360);
-    }
+        double specX = config.getDouble("mechanics.elimination.spectator_location.x", 0);
+        double specY = config.getDouble("mechanics.elimination.spectator_location.y", 100);
+        double specZ = config.getDouble("mechanics.elimination.spectator_location.z", 0);
+        settings.setSpectatorLocation(new Location(
+                plugin.getServer().getWorld(settings.getWorldName()),
+                specX, specY, specZ
+        ));
 
-    public int getMinGameplayDuration() {
-        return config.getInt("phases.gameplay.min_duration", 300);
-    }
-
-    public int getMaxGameplayDuration() {
-        return config.getInt("phases.gameplay.max_duration", 600);
-    }
-
-    public int getVoteDuration() {
-        return config.getInt("phases.vote.duration", 120);
-    }
-
-    public int getDiscussionTime() {
-        return config.getInt("phases.vote.discussion_time", 60);
-    }
-
-
-    // ========== MÉCANIQUES ==========
-
-    public int getDefaultSpectralArrows() {
-        return config.getInt("mechanics.spectral_arrows.default_count", 1);
-    }
-
-    public int getRevealDuration() {
-        return config.getInt("mechanics.spectral_arrows.reveal_duration", -1);
-    }
-
-    public int getDefaultSignCount() {
-        return config.getInt("mechanics.signs.default_count", 16);
-    }
-
-    public boolean shouldRefillSigns() {
-        return config.getBoolean("mechanics.signs.refill_each_phase", true);
-    }
-
-    public boolean shouldHideSkins() {
-        return config.getBoolean("mechanics.anonymity.hide_skins", true);
-    }
-
-    public boolean shouldHideNametags() {
-        return config.getBoolean("mechanics.anonymity.hide_nametags", true);
-    }
-
-    public String getDefaultSkin() {
-        return config.getString("mechanics.anonymity.default_skin", "steve");
-    }
-
-    public double getVoteInteractionRange() {
-        return config.getDouble("mechanics.vote.interaction_range", 100.0);
-    }
-
-    public boolean shouldShowVoteCount() {
-        return config.getBoolean("mechanics.vote.show_vote_count", false);
-    }
-
-    public boolean shouldRandomOnTie() {
-        return config.getBoolean("mechanics.vote.random_on_tie", true);
-    }
-
-    public boolean shouldRevealRoleOnDeath() {
-        return config.getBoolean("mechanics.elimination.reveal_role_on_death", false);
-    }
-
-    public boolean shouldTeleportSpectators() {
-        return config.getBoolean("mechanics.elimination.teleport_spectators", false);
-    }
-
-    public Location getSpectatorLocation() {
-        double x = config.getDouble("mechanics.elimination.spectator_location.x", 0);
-        double y = config.getDouble("mechanics.elimination.spectator_location.y", 100);
-        double z = config.getDouble("mechanics.elimination.spectator_location.z", 0);
-        return new Location(plugin.getServer().getWorld(getWorldName()), x, y, z);
-    }
-
-
-    // ========== POSITIONS VOTE ==========
-
-    public List<Location> getVoteTableLocations() {
-        List<String> rawLocations = config.getStringList("vote_tables");
-        List<Location> locations = new ArrayList<>();
-
-        for (String raw : rawLocations) {
+        // Tables de vote
+        List<Location> voteTables = new ArrayList<>();
+        for (String raw : config.getStringList("vote_tables")) {
             try {
                 String[] parts = raw.replace(" ", "").split(",");
                 if (parts.length == 3) {
                     double x = Double.parseDouble(parts[0]);
                     double y = Double.parseDouble(parts[1]);
                     double z = Double.parseDouble(parts[2]);
-                    locations.add(new Location(
-                            plugin.getServer().getWorld(getWorldName()),
+                    voteTables.add(new Location(
+                            plugin.getServer().getWorld(settings.getWorldName()),
                             x, y, z
                     ));
                 }
@@ -141,87 +88,51 @@ public class ConfigManager {
                 plugin.getLogger().warning("Position de table invalide: " + raw);
             }
         }
+        settings.setVoteTableLocations(voteTables);
 
-        return locations;
+        // Cooldowns
+        settings.setPoudreChemineeCooldown(config.getInt("cooldowns.poudre_cheminee", 20));
+        settings.setRayonnementToggleCooldown(config.getInt("cooldowns.rayonnement_toggle", 0));
+        settings.setFlammeJumelleCooldown(config.getInt("cooldowns.flamme_jumelle", 120));
+        settings.setFlammeJumelleDuration(config.getInt("cooldowns.flamme_jumelle_duration", 5));
+
+        // Messages
+        settings.setPrefix(config.getString("messages.prefix", "§e[Boite d'Allumettes]"));
+
+        // UI
+        settings.setBossBarEnabled(config.getBoolean("ui.bossbar.enabled", true));
+        settings.setBossBarColorGameplay(config.getString("ui.bossbar.color_gameplay", "BLUE"));
+        settings.setBossBarColorVote(config.getString("ui.bossbar.color_vote", "PINK"));
+        settings.setActionBarEnabled(config.getBoolean("ui.actionbar.enabled", true));
+        settings.setShowCooldowns(config.getBoolean("ui.actionbar.show_cooldowns", true));
+        settings.setSoundsEnabled(config.getBoolean("ui.sounds.enabled", true));
+
+        // Performance
+        settings.setDisplayUpdateInterval(config.getInt("performance.display_update_interval", 20));
+        settings.setCooldownCheckInterval(config.getInt("performance.cooldown_check_interval", 10));
     }
 
-
-    // ========== COOLDOWNS ==========
-
-    public int getPoudreChemineeCooldown() {
-        return config.getInt("cooldowns.poudre_cheminee", 20);
-    }
-
-    public int getRayonnementToggleCooldown() {
-        return config.getInt("cooldowns.rayonnement_toggle", 0);
-    }
-
-    public int getFlammeJumelleCooldown() {
-        return config.getInt("cooldowns.flamme_jumelle", 120);
-    }
-
-    public int getFlammeJumelleDuration() {
-        return config.getInt("cooldowns.flamme_jumelle_duration", 5);
-    }
-
-
-    // ========== MESSAGES ==========
-
-    public String getPrefix() {
-        return config.getString("messages.prefix", "§e[Boite d'Allumettes]");
-    }
-
-    public String getMessage(String path, String defaultValue) {
-        return config.getString("messages." + path, defaultValue);
-    }
-
-
-    // ========== UI ==========
-
-    public boolean isBossBarEnabled() {
-        return config.getBoolean("ui.bossbar.enabled", true);
-    }
-
-    public String getBossBarColorGameplay() {
-        return config.getString("ui.bossbar.color_gameplay", "BLUE");
-    }
-
-    public String getBossBarColorVote() {
-        return config.getString("ui.bossbar.color_vote", "PINK");
-    }
-
-    public boolean isActionBarEnabled() {
-        return config.getBoolean("ui.actionbar.enabled", true);
-    }
-
-    public boolean shouldShowCooldowns() {
-        return config.getBoolean("ui.actionbar.show_cooldowns", true);
-    }
-
-    public boolean areSoundsEnabled() {
-        return config.getBoolean("ui.sounds.enabled", true);
-    }
-
-    public String getSound(String type) {
-        return config.getString("ui.sounds." + type, "");
-    }
-
-
-    // ========== PERFORMANCE ==========
-
-    public int getDisplayUpdateInterval() {
-        return config.getInt("performance.display_update_interval", 20);
-    }
-
-    public int getCooldownCheckInterval() {
-        return config.getInt("performance.cooldown_check_interval", 10);
-    }
-
-
-    // ========== RELOAD ==========
-
+    /**
+     * Recharge la configuration
+     */
     public void reload() {
         plugin.reloadConfig();
+        loadSettings();
         plugin.getLogger().info("Configuration rechargée.");
     }
+
+    /**
+     * Obtient un son depuis la config
+     */
+    public String getSound(String key) {
+        return plugin.getConfig().getString("ui.sounds." + key, "");
+    }
+
+    /**
+     * Retourne l'objet settings
+     */
+    public GameSettings getSettings() {
+        return settings;
+    }
+
 }

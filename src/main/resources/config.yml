@@ -23,7 +23,7 @@ phases:
 
   vote:
     # Durée en secondes
-    duration: 120
+    duration: 240
 
     # Temps de discussion avant le vote (en secondes)
     discussion_time: 60
