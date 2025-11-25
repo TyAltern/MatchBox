@@ -1,4 +1,4 @@
-package me.tyalternative.matchbox.role.abilities;
+package me.tyalternative.matchbox.abilities;
 
 public enum AbilityTrigger {
     /** Clic droit sur un joueur */

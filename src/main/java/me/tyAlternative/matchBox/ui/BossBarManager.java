@@ -2,70 +2,186 @@ package me.tyalternative.matchbox.ui;
 
 import me.tyalternative.matchbox.core.GameManager;
 import me.tyalternative.matchbox.phase.PhaseType;
+import me.tyalternative.matchbox.player.PlayerData;
+import me.tyalternative.matchbox.utils.TimeUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.entity.Boss;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+
+/**
+ * Gestionnaire de BossBar avec affichage différencié selon les rôles
+ */
 public class BossBarManager {
 
     private final GameManager gameManager;
-    private BossBar bossBar;
+    private final Map<UUID, BossBar> playerBossBars;
+    private BukkitTask updateTask;
 
     public BossBarManager(GameManager gameManager) {
         this.gameManager = gameManager;
+        this.playerBossBars = new HashMap<>();
     }
 
-    public void update() {
-        if (!gameManager.getSettings().isBossBarEnabled()) return;
-
-        PhaseType phase = gameManager.getCurrentPhase();
-        if (phase == PhaseType.LOBBY || phase == PhaseType.END) {
-            remove();
+    /**
+     * Démarre la mise à jour automatique
+     */
+    public void start() {
+        if (!gameManager.getSettings().isBossBarEnabled()) {
             return;
         }
 
-        if (bossBar == null) create();
+        // Update toutes les secondes
+        updateTask = Bukkit.getScheduler().runTaskTimer(
+                gameManager.getPlugin(),
+                this::update,
+                0L,
+                20L
+        );
+    }
 
-        // Mettre à jour le texte et la progression
-        int remaining = gameManager.getPhaseManager().getRemainingSeconds();
-        int total = phase == PhaseType.GAMEPLAY ?
-                gameManager.getSettings().getGameplayDuration() :
-                gameManager.getSettings().getVoteDuration();
+    /**
+     * Met à jour toutes les BossBars
+     */
+    public void update() {
+        if (!gameManager.getSettings().isBossBarEnabled()) return;
+        PhaseType phase = gameManager.getPhaseManager().getCurrentType();
 
-        float progress = Math.max(0f, Math.min(1f, (float) remaining / total));
-        String title = phase.getDisplayName() + " §7- §f" + formatTime(remaining);
+        if (!phase.isInGame()) {
+            removeAll();
+            return;
+        }
+
+        for (PlayerData data : gameManager.getPlayerManager().getAlive()) {
+            Player player = data.getPlayer();
+            if (player == null) continue;
+
+            updatePlayerBossBar(player, data, phase);
+        }
+    }
+
+    /**
+     * Met à jour la BossBar d'un joueur spécifique
+     */
+    private void updatePlayerBossBar(Player player, PlayerData data, PhaseType phase) {
+        BossBar bossBar = playerBossBars.get(player.getUniqueId());
+
+        if (bossBar == null) {
+            bossBar = createBossBar(phase);
+            playerBossBars.put(player.getUniqueId(), bossBar);
+            bossBar.addPlayer(player);
+        }
+
+        // détermine si le joueur peut voir le time
+        boolean showTimer = canSeeTimer(data, phase);
+
+        // Construire le titre
+        String title = buildTitle(phase, showTimer);
+
+        // Calculer la progression
+        float progress = calculateProgress(phase, showTimer);
 
         bossBar.setTitle(title);
         bossBar.setProgress(progress);
     }
 
-    public void create() {
-        PhaseType phase = gameManager.getCurrentPhase();
-        BarColor color = phase == PhaseType.GAMEPLAY ? BarColor.BLUE : BarColor.PINK;
+    /**
+     * Vérifie si un joueur peut voir le timer
+     */
+    private boolean canSeeTimer(PlayerData data, PhaseType phase) {
+        // En phase de vote : tout le monde voit le timer
+        if (phase == PhaseType.VOTE) return true;
 
-        bossBar = Bukkit.createBossBar("", color, BarStyle.SOLID);
-
-        for (Player player : gameManager.getPlayerManager().getAlivePlayer()) {
-            bossBar.addPlayer(player);
+        // En phase de gameplay : seulement ceux avec Clairvoyance
+        if (phase == PhaseType.GAMEPLAY) {
+            return data.hasRole() && data.getRole().hasAbility("clairvoyance");
         }
+
+        return false;
     }
 
-    public void remove() {
+    /**
+     * Construit le titre de la BossBar
+     */
+    private String buildTitle(PhaseType phase, boolean showTimer) {
+        String baseName = phase.getDisplayName();
+
+        if (showTimer) {
+            int remaining = gameManager.getPhaseManager().getRemainingSeconds();
+            String time = TimeUtil.formatSeconds(remaining);
+            return baseName + " §7- §f" + time;
+        } else {
+            return "§7Phase de " + baseName + "§7 en cours";
+        }
+
+    }
+
+    /**
+     * Calcule la progression de la barre
+     */
+    private float calculateProgress(PhaseType phase, boolean showTimer) {
+        if (!showTimer) return 1.0f;
+
+        int remaining = gameManager.getPhaseManager().getRemainingSeconds();
+        int total = switch (phase) {
+            case GAMEPLAY -> gameManager.getSettings().getGameplayDuration();
+            case VOTE -> gameManager.getSettings().getVoteDuration();
+            case null, default -> remaining;
+        };
+        return Math.max(0f, Math.min(1f, (float) remaining/total));
+    }
+
+    /**
+     * Crée une nouvelle BossBar
+     */
+    private BossBar createBossBar(PhaseType phase) {
+        BarColor color;
+        try {
+            color = switch (phase) {
+                case GAMEPLAY -> BarColor.valueOf(gameManager.getSettings().getBossBarColorGameplay());
+                case VOTE -> BarColor.valueOf(gameManager.getSettings().getBossBarColorVote());
+                case null, default -> BarColor.WHITE;
+            };
+        } catch (IllegalArgumentException exception) {
+            color = BarColor.WHITE;
+        }
+        return Bukkit.createBossBar("", color, BarStyle.SOLID);
+    }
+
+    /**
+     * Retire la BossBar d'un joueur
+     */
+    public void removePlayer(UUID playerId) {
+        BossBar bossBar = playerBossBars.remove(playerId);
         if (bossBar != null) {
             bossBar.removeAll();
-            bossBar = null;
         }
     }
 
+    /**
+     * Retire toutes les BossBars
+     */
     public void removeAll() {
-        remove();
+        playerBossBars.values().forEach(BossBar::removeAll);
+        playerBossBars.clear();
     }
 
-    private String formatTime(int seconds) {
-        int minutes = seconds / 60;
-        int secs = seconds % 60;
-        return String.format("%02d:%02d", minutes, secs);
+    /**
+     * Arrête les mises à jour
+     */
+    public void stop() {
+        if (updateTask != null && !updateTask.isCancelled()) {
+            updateTask.cancel();
+        }
+        removeAll();
     }
+
 }

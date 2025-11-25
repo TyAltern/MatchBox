@@ -14,7 +14,7 @@ public class GameplayPhase implements GamePhase {
             gameManager.getAnonymityManager().hideAllSkins();
         }
         if (gameManager.getSettings().shouldHideNametags()) {
-            gameManager.getAnonymityManager().hideAllNametags();
+            gameManager.getAnonymityManager().hideAllPlayersNametag();
         }
 
         // Détruire les anciens panneaux
@@ -26,6 +26,8 @@ public class GameplayPhase implements GamePhase {
                 data.getRole().onGameplayPhaseStart(data.getPlayer(), data);
             }
         }
+
+        gameManager.getAbilityUsageManager().resetRoundForAll();
 
         gameManager.broadcastMessage("§bPhase de Gameplay !");
         gameManager.getSoundManager().playToAll("phase_change");
@@ -41,6 +43,9 @@ public class GameplayPhase implements GamePhase {
                 data.getRole().onGameplayPhaseEnd(data.getPlayer(), data);
             }
         }
+
+        // Restaurer les Skins/Nametags
+        gameManager.getAnonymityManager().restoreAll();
 
         // Traiter les embrasements
         gameManager.getEliminationManager().processEmbrasements();

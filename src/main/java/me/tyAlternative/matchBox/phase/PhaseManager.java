@@ -83,11 +83,13 @@ public class PhaseManager {
         gameManager.getEventBus().call(new PhaseChangeEvent(oldType, type));
 
         // Programmer la fin
+
+        gameManager.debugMessage("time set: " + context.getPhaseDuration() / 1000.0);
         if (type.isInGame()) {
             long durationTicks = context.getPhaseDuration() / 50;
             phaseTask = Bukkit.getScheduler().runTaskLater(
                     gameManager.getPlugin(),
-                    () -> endCurrentPhase(),
+                    this::endCurrentPhase,
                     durationTicks
             );
         }
@@ -122,6 +124,7 @@ public class PhaseManager {
             case GAMEPLAY:
                 // Après Gameplay: Vérifier victoire puis vote
                 if (gameManager.getVictoryManager().checkVictory()) {
+                    gameManager.stopGame("Win");
                     return PhaseType.END;
                 }
                 return PhaseType.VOTE;
@@ -129,6 +132,7 @@ public class PhaseManager {
             case VOTE:
                 // Après Vote: Vérifier victoire puis Gameplay
                 if (gameManager.getVictoryManager().checkVictory()) {
+                    gameManager.stopGame("Win");
                     return PhaseType.END;
                 }
                 // Nouvelle manche
@@ -136,7 +140,7 @@ public class PhaseManager {
                 return PhaseType.GAMEPLAY;
 
             case END:
-                return null; // Fin de partie
+                return PhaseType.LOBBY; // Fin de partie
 
             default:
                 return null;

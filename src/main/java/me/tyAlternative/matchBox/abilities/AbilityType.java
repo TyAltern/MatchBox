@@ -1,4 +1,4 @@
-package me.tyalternative.matchbox.role.abilities;
+package me.tyalternative.matchbox.abilities;
 
 public enum AbilityType {
     /** Capacité active nécessitant une action du joueur */

@@ -2,6 +2,8 @@ package me.tyalternative.matchbox.mechanics.vote;
 
 import me.tyalternative.matchbox.core.GameManager;
 import me.tyalternative.matchbox.player.PlayerData;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 
 import java.util.*;
 
@@ -18,11 +20,17 @@ public class VoteManager {
         if (voterData == null || !voterData.canVote()) return;
 
         voterData.voteFor(targetId);
+        gameManager.getGlowingManager().setPlayerGlow(voterId, targetId, ChatColor.GOLD);
     }
 
     public void removeVote(UUID voterId) {
         PlayerData voterData = gameManager.getPlayerManager().get(voterId);
-        if (voterData != null ) voterData.clearVote();
+        if (voterData != null ) {
+            UUID targetId = voterData.getVotedPlayer();
+            voterData.clearVote();
+            if (targetId == null || Bukkit.getPlayer(targetId) == null) return;
+            gameManager.getGlowingManager().removePlayerGlow(voterId, targetId);
+        }
     }
 
     public UUID calculateResults() {
@@ -58,7 +66,7 @@ public class VoteManager {
 
     public void clearAll() {
         for (PlayerData data : gameManager.getPlayerManager().getAll()) {
-            data.clearVote();
+            removeVote(data.getPlayerId());
         }
     }
 

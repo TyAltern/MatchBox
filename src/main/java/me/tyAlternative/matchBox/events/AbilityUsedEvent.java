@@ -1,6 +1,6 @@
 package me.tyalternative.matchbox.events;
 
-import me.tyalternative.matchbox.role.abilities.Ability;
+import me.tyalternative.matchbox.abilities.Ability;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;

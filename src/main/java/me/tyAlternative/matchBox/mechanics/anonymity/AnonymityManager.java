@@ -1,6 +1,7 @@
 package me.tyalternative.matchbox.mechanics.anonymity;
 import me.tyalternative.matchbox.MatchBox;
 import me.tyalternative.matchbox.core.GameManager;
+import me.tyalternative.matchbox.player.PlayerData;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
@@ -344,6 +345,7 @@ public class AnonymityManager {
         if (team == null) {
             team = scoreboard.registerNewTeam("hidden");
         }
+        if (team.hasPlayer(player)) return;
         team.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
         team.addEntry(player.getName());
 
@@ -369,7 +371,7 @@ public class AnonymityManager {
     }
     public void showAllNametags() {
         for (Player player : gameManager.getPlayerManager().getAlivePlayer()) {
-            hidePlayersDefaultNametag(player);
+//            hidePlayersDefaultNametag(player);
             for (Player viewer : gameManager.getPlayerManager().getAlivePlayer()) {
                 reset(viewer, player);
             }
@@ -387,10 +389,48 @@ public class AnonymityManager {
     }
 
 
-    public void hideSkin(Player player) {
+    public void hideAllPlayersNametag() {
+        for (PlayerData playerData : gameManager.getPlayerManager().getAll()) {
+            Player viewer = playerData.getPlayer();
+            if (viewer == null) continue;
+
+            hidePlayersDefaultNametag(viewer);
+
+            for (Player target : gameManager.getPlayerManager().getAlivePlayer()) {
+                hide(viewer, target);
+            }
+
+        }
+    }
+
+    public void showAllPlayersNametag() {
+        for (PlayerData playerData : gameManager.getPlayerManager().getAll()) {
+            Player viewer = playerData.getPlayer();
+            if (viewer == null) continue;
+
+            showPlayersDefaultNametag(viewer);
+
+            for (Player target : gameManager.getPlayerManager().getAlivePlayer()) {
+                hide(viewer, target);
+            }
+
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    public void hideSkin(Player player, String skin) {
         if (hiddenSkins.contains(player.getUniqueId())) return;
 
-        String skin = gameManager.getSettings().getDefaultSkin();
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
                 "skin set " + skin + " " + player.getName());
 
@@ -407,8 +447,13 @@ public class AnonymityManager {
     }
 
     public void hideAllSkins() {
-        for (Player player : gameManager.getPlayerManager().getAlivePlayer()) {
-            hideSkin(player);
+        List<Player> players = gameManager.getPlayerManager().getAlivePlayer();
+        String skinName = gameManager.getSettings().getDefaultSkin();
+
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+                "skin set " + skinName + " -all");
+        for (Player player : players) {
+            hideSkin(player, skinName);
         }
     }
 
@@ -421,7 +466,7 @@ public class AnonymityManager {
 
     public void restoreAll() {
         showAllSkins();
-        showAllNametags();
+        showAllPlayersNametag();
     }
 
 

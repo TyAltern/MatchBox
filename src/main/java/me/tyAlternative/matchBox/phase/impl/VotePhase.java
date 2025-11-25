@@ -1,11 +1,13 @@
 package me.tyalternative.matchbox.phase.impl;
 
+import me.tyalternative.matchbox.MatchBox;
 import me.tyalternative.matchbox.core.GameManager;
 import me.tyalternative.matchbox.phase.GamePhase;
 import me.tyalternative.matchbox.phase.PhaseContext;
 import me.tyalternative.matchbox.phase.PhaseType;
 import me.tyalternative.matchbox.player.PlayerData;
 import org.bukkit.Location;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -13,18 +15,19 @@ import java.util.List;
 public class VotePhase implements GamePhase{
     @Override
     public void onStart(GameManager gameManager, PhaseContext context) {
-        // Restaurer les Skins/Nametags
-        gameManager.getAnonymityManager().showAllSkins();
-        gameManager.getAnonymityManager().showAllNametags();
 
         // Téléportation à la salle de vote
         teleportToTables(gameManager);
 
         // Notifier les rôles
         for (PlayerData data : gameManager.getPlayerManager().getAlive()) {
-            if (data.getPlayer() != null && data.hasRole()) {
-                data.getRole().onVotePhaseStart(data.getPlayer(), data);
-            }
+            Player player = data.getPlayer();
+            if (player == null || !data.hasRole()) continue;
+
+            data.getRole().onVotePhaseStart(data.getPlayer(), data);
+            player.getAttribute(Attribute.BLOCK_INTERACTION_RANGE).setBaseValue(100);
+            player.getAttribute(Attribute.ENTITY_INTERACTION_RANGE).setBaseValue(100);
+
         }
 
         gameManager.broadcastMessage("§dPhase de Vote !");
@@ -37,11 +40,15 @@ public class VotePhase implements GamePhase{
 
         // Notifier les rôles
         for (PlayerData data : gameManager.getPlayerManager().getAlive()) {
-            if (data.getPlayer() != null && data.hasRole()) {
-                data.getRole().onVotePhaseEnd(data.getPlayer(), data);
-            }
+            Player player = data.getPlayer();
+            if (player == null || !data.hasRole()) continue;
+
+            data.getRole().onVotePhaseEnd(data.getPlayer(), data);
+            player.getAttribute(Attribute.BLOCK_INTERACTION_RANGE).setBaseValue(4.5);
+            player.getAttribute(Attribute.ENTITY_INTERACTION_RANGE).setBaseValue(3);
         }
 
+        MatchBox.getInstance().getLogger().info("VOTTTTTEEEEEE");
         // Calculer et traiter le vote
         gameManager.getEliminationManager().processVote();
     }

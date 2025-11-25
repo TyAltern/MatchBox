@@ -17,7 +17,7 @@ general:
 phases:
   gameplay:
     # Durée en secondes (entre 300 et 600 = 5 à 10 minutes)
-    duration: 360
+    duration: 30
     min_duration: 300
     max_duration: 600
 

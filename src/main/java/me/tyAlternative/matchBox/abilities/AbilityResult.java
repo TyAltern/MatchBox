@@ -1,4 +1,4 @@
-package me.tyalternative.matchbox.role.abilities;
+package me.tyalternative.matchbox.abilities;
 
 public class AbilityResult {
     private final boolean success;

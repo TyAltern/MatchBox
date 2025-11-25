@@ -7,10 +7,10 @@ import me.tyalternative.matchbox.victory.VictoryCondition;
 public class LastFlammeStandingCondition implements VictoryCondition {
     @Override
     public RoleType check(GameManager gameManager) {
-        int flammeCount = gameManager.getPlayerManager().getByType(RoleType.FLAMME).size();
-        int batonCount = gameManager.getPlayerManager().getByType(RoleType.BATON).size();
+        int flammeCount = gameManager.getPlayerManager().getAliveByType(RoleType.FLAMME).size();
+        int batonCount = gameManager.getPlayerManager().getAliveByType(RoleType.BATON).size();
 
-        if (flammeCount == 1 && batonCount <= 1) {
+        if (flammeCount == 1 && batonCount == 0) {
             return RoleType.FLAMME;
         }
 

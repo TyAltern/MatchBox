@@ -1,6 +1,8 @@
 package me.tyalternative.matchbox.core;
 
 import me.tyalternative.matchbox.MatchBox;
+import me.tyalternative.matchbox.abilities.AbilityUsageManager;
+import me.tyalternative.matchbox.abilities.CooldownManager;
 import me.tyalternative.matchbox.composition.CompositionManager;
 import me.tyalternative.matchbox.config.GameSettings;
 import me.tyalternative.matchbox.elimination.EliminationManager;
@@ -9,6 +11,7 @@ import me.tyalternative.matchbox.events.GameStartEvent;
 import me.tyalternative.matchbox.mechanics.anonymity.AnonymityManager;
 import me.tyalternative.matchbox.mechanics.arrow.SpectralArrowManager;
 import me.tyalternative.matchbox.mechanics.embrasement.EmbrasementManager;
+import me.tyalternative.matchbox.mechanics.glowing.GlowingManager;
 import me.tyalternative.matchbox.mechanics.protection.ProtectionManager;
 import me.tyalternative.matchbox.mechanics.sign.SignManager;
 import me.tyalternative.matchbox.mechanics.vote.VoteManager;
@@ -52,6 +55,9 @@ public class GameManager {
     private final SpectralArrowManager arrowManager;
     private final SignManager signManager;
     private final AnonymityManager anonymityManager;
+    private final GlowingManager glowingManager;
+    private final CooldownManager cooldownManager;
+    private final AbilityUsageManager abilityUsageManager;
 
     // Systèmes
     private final EliminationManager eliminationManager;
@@ -82,6 +88,9 @@ public class GameManager {
         this.arrowManager = new SpectralArrowManager(this);
         this.signManager = new SignManager(this);
         this.anonymityManager = new AnonymityManager(this);
+        this.glowingManager = new GlowingManager();
+        this.cooldownManager = new CooldownManager();
+        this.abilityUsageManager = new AbilityUsageManager(this);
 
         // Init systèmes
         this.eliminationManager = new EliminationManager(this);
@@ -103,7 +112,8 @@ public class GameManager {
             return false;
         }
 
-        compositionManager.setRoleCount(getPlugin().getRoleRegistry().get("BATON"), 2);
+        compositionManager.setRoleCount(getPlugin().getRoleRegistry().get("BATON"), 1);
+        compositionManager.setRoleCount(getPlugin().getRoleRegistry().get("ETINCELLE"), 1);
 
         // Vérifier la composition
         Map<Role, Integer> composition = compositionManager.getComposition();
@@ -159,6 +169,8 @@ public class GameManager {
         broadcastMessage("§7La partie commence !");
         soundManager.playToAll("phase_change");
 
+        getBossBarManager().start();
+
         return true;
     }
 
@@ -168,9 +180,12 @@ public class GameManager {
         if (!reason.isEmpty()) plugin.getLogger().info("Arrêt de la partie: " + reason);
 
         gameRunning = false;
+        // Arrêter BossBarManager
+        bossBarManager.stop();
 
         // Arrêter phaseManger
         phaseManager.stop();
+
 
         // Événements
         eventBus.call(new GameEndEvent(null, reason));
@@ -252,6 +267,7 @@ public class GameManager {
         // Remettre les joueurs en survie
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.setGameMode(GameMode.SURVIVAL);
+
         }
 
         // Nettoyer managers
@@ -285,6 +301,12 @@ public class GameManager {
         }
     }
 
+    public void debugMessage(String message) {
+        if (getSettings().isDebug()) {
+            MatchBox.getInstance().getLogger().info(message);
+        }
+    }
+
 
 
 
@@ -310,6 +332,9 @@ public class GameManager {
     public SpectralArrowManager getArrowManager() { return arrowManager; }
     public SignManager getSignManager() { return signManager; }
     public AnonymityManager getAnonymityManager() { return anonymityManager; }
+    public GlowingManager getGlowingManager() { return glowingManager; }
+    public CooldownManager getCooldownManager() { return cooldownManager; }
+    public AbilityUsageManager getAbilityUsageManager() { return abilityUsageManager; }
 
     public EliminationManager getEliminationManager() { return eliminationManager; }
     public VictoryManager getVictoryManager() { return victoryManager; }

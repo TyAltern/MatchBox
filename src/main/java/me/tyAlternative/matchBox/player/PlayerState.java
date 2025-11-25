@@ -4,7 +4,7 @@ package me.tyalternative.matchbox.player;
 /**
  * États possibles d'un joueur dans le jeu
  */
-public enum PlayerState {
+public enum  PlayerState {
     /**
      * En attente dans le lobby
      */

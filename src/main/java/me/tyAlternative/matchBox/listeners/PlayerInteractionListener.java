@@ -3,10 +3,10 @@ package me.tyalternative.matchbox.listeners;
 import me.tyalternative.matchbox.core.GameManager;
 import me.tyalternative.matchbox.phase.PhaseType;
 import me.tyalternative.matchbox.player.PlayerData;
-import me.tyalternative.matchbox.role.abilities.Ability;
-import me.tyalternative.matchbox.role.abilities.AbilityContext;
-import me.tyalternative.matchbox.role.abilities.AbilityResult;
-import me.tyalternative.matchbox.role.abilities.AbilityTrigger;
+import me.tyalternative.matchbox.abilities.Ability;
+import me.tyalternative.matchbox.abilities.AbilityContext;
+import me.tyalternative.matchbox.abilities.AbilityResult;
+import me.tyalternative.matchbox.abilities.AbilityTrigger;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -61,13 +61,20 @@ public class PlayerInteractionListener implements Listener {
         Player player = event.getPlayer();
 
         PlayerData playerData = gameManager.getPlayerManager().get(player);
+        PlayerData targetData = gameManager.getPlayerManager().get(target);
         if (playerData == null || !playerData.isAlive()) return;
+        if (targetData == null || !targetData.isAlive()) return;
 
         // Phase de Gameplay
         if (gameManager.getCurrentPhase() == PhaseType.GAMEPLAY) {
             boolean emptyHand = player.getInventory().getItemInMainHand().isEmpty();
             handleAbilityTrigger(playerData, target, AbilityTrigger.RIGHT_CLICK_PLAYER, emptyHand);
+        } else if(gameManager.getCurrentPhase() == PhaseType.VOTE) {
+            handleVoteClick(playerData, target);
+
         }
+
+
 
 
 

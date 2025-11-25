@@ -26,7 +26,22 @@ public class EliminationManager {
         Map<UUID, EmbrasementCause> embrased = gameManager.getEmbrasementManager().getQueue().getAllWithCauses();
 
         for (Map.Entry<UUID, EmbrasementCause> entry : embrased.entrySet()) {
+
+            if (gameManager.getProtectionManager().isProtected(entry.getKey())) continue;
+
             EliminationCause cause = getEliminationCause(entry.getValue());
+
+            PlayerData data = gameManager.getPlayerManager().get(entry.getKey());
+            if (data != null && data.hasRole() && data.isAlive()) {
+
+                // Retarde les Calcinés embrasés
+                if (data.getRole().hasAbility("calcine")) {
+                    data.setCustomData("pending_embrasement", true);
+                    data.setCustomData("embrasement_cause", cause);
+                    continue;
+                }
+            }
+
 
             eliminate(entry.getKey(), cause);
         }
@@ -89,6 +104,7 @@ public class EliminationManager {
         // Changer l'état
         data.setState(PlayerState.DEAD);
         player.setGameMode(GameMode.SPECTATOR);
+        gameManager.getBossBarManager().removePlayer(playerId);
 
         // Message
         String roleName = data.hasRole() ? data.getRole().getDisplayName() : "Inconnu";

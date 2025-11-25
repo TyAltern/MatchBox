@@ -26,6 +26,7 @@ public final class MatchBox extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        gameManager = new GameManager(this);
 
         getLogger().info("======================================");
         getLogger().info("   MatchBox v" + getPluginMeta().getVersion());
@@ -46,7 +47,6 @@ public final class MatchBox extends JavaPlugin {
         roleRegistry = new RoleRegistry();
         registerRoles();
 
-        gameManager = new GameManager(this);
 
         registerCommands();
         registerListeners();
@@ -76,10 +76,6 @@ public final class MatchBox extends JavaPlugin {
             return false;
         }
 
-        boolean glowingEntities = getServer().getPluginManager().getPlugin("GlowingEntities") != null;
-        if (!glowingEntities) {
-            getLogger().warning("GlowingEntities optionnel non installé.");
-        }
 
         return true;
     }
@@ -89,7 +85,7 @@ public final class MatchBox extends JavaPlugin {
         getLogger().info("Enregistrement des rôles...");
 
         // Flammes
-//        roleRegistry.register(new Etincelle());
+        roleRegistry.register(new Etincelle());
 //        roleRegistry.register(new Torche());
 
         // Bâtons
@@ -133,6 +129,8 @@ public final class MatchBox extends JavaPlugin {
     public static MatchBox getInstance() { return instance; }
 
     public ConfigManager getConfigManager() { return configManager; }
-    public GameManager getGameManager() { return gameManager; }
+    public GameManager getGameManager() {
+        return gameManager;
+    }
     public RoleRegistry getRoleRegistry() { return roleRegistry; }
 }

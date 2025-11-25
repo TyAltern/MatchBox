@@ -1,11 +1,10 @@
 package me.tyalternative.matchbox.role;
 
 import me.tyalternative.matchbox.player.PlayerData;
-import me.tyalternative.matchbox.role.abilities.Ability;
+import me.tyalternative.matchbox.abilities.Ability;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
