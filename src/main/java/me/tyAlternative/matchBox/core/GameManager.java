@@ -8,6 +8,7 @@ import me.tyalternative.matchbox.config.GameSettings;
 import me.tyalternative.matchbox.elimination.EliminationManager;
 import me.tyalternative.matchbox.events.GameEndEvent;
 import me.tyalternative.matchbox.events.GameStartEvent;
+import me.tyalternative.matchbox.listeners.DoubleSwapDetector;
 import me.tyalternative.matchbox.mechanics.anonymity.AnonymityManager;
 import me.tyalternative.matchbox.mechanics.arrow.SpectralArrowManager;
 import me.tyalternative.matchbox.mechanics.embrasement.EmbrasementManager;
@@ -58,6 +59,7 @@ public class GameManager {
     private final GlowingManager glowingManager;
     private final CooldownManager cooldownManager;
     private final AbilityUsageManager abilityUsageManager;
+    private final DoubleSwapDetector doubleSwapDetector;
 
     // Systèmes
     private final EliminationManager eliminationManager;
@@ -91,6 +93,7 @@ public class GameManager {
         this.glowingManager = new GlowingManager();
         this.cooldownManager = new CooldownManager();
         this.abilityUsageManager = new AbilityUsageManager(this);
+        this.doubleSwapDetector = new DoubleSwapDetector(this);
 
         // Init systèmes
         this.eliminationManager = new EliminationManager(this);
@@ -112,8 +115,6 @@ public class GameManager {
             return false;
         }
 
-        compositionManager.setRoleCount(getPlugin().getRoleRegistry().get("BATON"), 1);
-        compositionManager.setRoleCount(getPlugin().getRoleRegistry().get("ETINCELLE"), 1);
 
         // Vérifier la composition
         Map<Role, Integer> composition = compositionManager.getComposition();
@@ -145,7 +146,6 @@ public class GameManager {
             PlayerData data = playerManager.getOrCreate(player);
             data.setState(PlayerState.PLAYING);
             data.setSpectralArrowsRemaining(getSettings().getDefaultSpectralArrows());
-            data.setSignsRemaining(getSettings().getDefaultSignCount());
         }
 
         // Distribuer les rôles
@@ -214,8 +214,7 @@ public class GameManager {
 
         // Shuffle
 
-//        Collections.shuffle(rolesToAssign);
-//        Collections.shuffle(players);
+        Collections.shuffle(rolesToAssign);
 
         // Assigner
         for (int i = 0; i < players.size(); i++) {
@@ -248,13 +247,6 @@ public class GameManager {
         protectionManager.clearAll();
         voteManager.clearAll();
 
-        // Recharge de panneau si configuré
-        if (getSettings().shouldRefillSigns()) {
-            int signCount = getSettings().getDefaultSignCount();
-            for (PlayerData data : playerManager.getAlive()) {
-                data.setSignsRemaining(signCount);
-            }
-        }
 
         // Nouvelle phase sera démarrée par PhaseManager
 
@@ -276,7 +268,7 @@ public class GameManager {
         protectionManager.clearAll();
         voteManager.clearAll();
         signManager.clearAll();
-        anonymityManager.restoreAll();
+//        anonymityManager.restoreAll();
 
         // UI
         bossBarManager.removeAll();
@@ -335,6 +327,7 @@ public class GameManager {
     public GlowingManager getGlowingManager() { return glowingManager; }
     public CooldownManager getCooldownManager() { return cooldownManager; }
     public AbilityUsageManager getAbilityUsageManager() { return abilityUsageManager; }
+    public DoubleSwapDetector getDoubleSwapDetector() { return doubleSwapDetector; }
 
     public EliminationManager getEliminationManager() { return eliminationManager; }
     public VictoryManager getVictoryManager() { return victoryManager; }

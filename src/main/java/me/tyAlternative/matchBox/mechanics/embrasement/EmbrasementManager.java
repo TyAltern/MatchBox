@@ -15,8 +15,8 @@ public class EmbrasementManager {
     }
 
     public boolean embrase(UUID playerId, EmbrasementCause cause) {
-        // TODO:
-        return false;
+        queue.add(playerId, cause);
+        return true;
     }
 
     public boolean isEmbrased(UUID playerId) {

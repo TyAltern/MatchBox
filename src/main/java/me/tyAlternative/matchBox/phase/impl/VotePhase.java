@@ -48,9 +48,10 @@ public class VotePhase implements GamePhase{
             player.getAttribute(Attribute.ENTITY_INTERACTION_RANGE).setBaseValue(3);
         }
 
-        MatchBox.getInstance().getLogger().info("VOTTTTTEEEEEE");
         // Calculer et traiter le vote
         gameManager.getEliminationManager().processVote();
+
+        gameManager.getVoteManager().clearAll();
     }
 
     @Override

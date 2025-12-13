@@ -99,6 +99,12 @@ cooldowns:
   flamme_jumelle: 120
   flamme_jumelle_duration: 5
 
+abilities:
+  double_swap_detection:
+    enabled: true
+    max_delay_ms: 500 # 0.5 seconde
+    cancel_first_swap: true
+
 # Composition par défaut
 default_composition:
   ETINCELLE: 1

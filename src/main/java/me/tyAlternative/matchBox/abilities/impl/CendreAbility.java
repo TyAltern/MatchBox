@@ -4,13 +4,14 @@ import me.tyalternative.matchbox.player.PlayerData;
 import me.tyalternative.matchbox.abilities.*;
 import org.bukkit.entity.Player;
 
-public class ClairvoyanceAbility extends Ability {
 
-    public static String ID = "clairvoyance";
+public class CendreAbility extends Ability{
 
-    public ClairvoyanceAbility() {
-        super(ID, "§dClairvoyance",
-                "Voit le temps restant",
+    public static String ID = "cendre";
+
+    public CendreAbility() {
+        super(ID, "§7Cendre",
+                "Résistance Poudre de cheminée",
                 AbilityType.PASSIVE, AbilityTrigger.AUTOMATIC);
     }
 
@@ -20,7 +21,7 @@ public class ClairvoyanceAbility extends Ability {
     }
 
     @Override
-    public AbilityResult execute(Player player, PlayerData data, AbilityContext ctx) {
+    public AbilityResult execute(Player player, PlayerData data, AbilityContext context) {
         return AbilityResult.success();
     }
 

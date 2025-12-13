@@ -1,5 +1,6 @@
 package me.tyalternative.matchbox.phase;
 
+import me.tyalternative.matchbox.MatchBox;
 import me.tyalternative.matchbox.core.GameManager;
 import me.tyalternative.matchbox.events.PhaseChangeEvent;
 import me.tyalternative.matchbox.phase.GamePhase;
@@ -57,9 +58,9 @@ public class PhaseManager {
         // Arrêter la phase actuelle
         if (currentPhase != null && phaseTask != null) {
             phaseTask.cancel();
-            if (context != null) {
-                currentPhase.onEnd(gameManager, context);
-            }
+//            if (context != null) {
+//                currentPhase.onEnd(gameManager, context);
+//            }
         }
 
         // Changer de phase
@@ -102,14 +103,16 @@ public class PhaseManager {
      */
     public void endCurrentPhase() {
         if (currentPhase == null) return;
+        MatchBox.getInstance().getLogger().info("context" + context);
 
         currentPhase.onEnd(gameManager, context);
 
         // Déterminer la prochaine phase
         PhaseType nextPhase = determineNextPhase();
 
+
         if (nextPhase != null) {
-            startPhase(nextPhase, context.getRoundNumber());
+            startPhase(nextPhase, gameManager.getRoundNumber());
         }
     }
 

@@ -447,20 +447,21 @@ public class AnonymityManager {
     }
 
     public void hideAllSkins() {
-        List<Player> players = gameManager.getPlayerManager().getAlivePlayer();
+//        List<Player> players = gameManager.getPlayerManager().getAlivePlayer();
         String skinName = gameManager.getSettings().getDefaultSkin();
 
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
                 "skin set " + skinName + " -all");
-        for (Player player : players) {
-            hideSkin(player, skinName);
-        }
+//        for (Player player : players) {
+//            hideSkin(player, skinName);
+//        }
     }
 
     public void showAllSkins() {
-        for (Player player : gameManager.getPlayerManager().getAlivePlayer()) {
-            showSkin(player);
-        }
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(),"skin clear -all");
+//        for (Player player : gameManager.getPlayerManager().getAlivePlayer()) {
+//            showSkin(player);
+//        }
     }
 
 

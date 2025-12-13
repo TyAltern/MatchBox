@@ -1,8 +1,12 @@
 package me.tyalternative.matchbox.ui;
 
+import me.tyalternative.matchbox.abilities.Ability;
+import me.tyalternative.matchbox.abilities.AbilityContext;
+import me.tyalternative.matchbox.abilities.impl.ClairvoyanceAbility;
 import me.tyalternative.matchbox.core.GameManager;
 import me.tyalternative.matchbox.phase.PhaseType;
 import me.tyalternative.matchbox.player.PlayerData;
+import me.tyalternative.matchbox.role.Role;
 import me.tyalternative.matchbox.utils.TimeUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
@@ -91,6 +95,9 @@ public class BossBarManager {
 
         bossBar.setTitle(title);
         bossBar.setProgress(progress);
+
+        // Modifie la couleur en fonction de la phase
+        changeBossBarColor(player, phase);
     }
 
     /**
@@ -102,7 +109,14 @@ public class BossBarManager {
 
         // En phase de gameplay : seulement ceux avec Clairvoyance
         if (phase == PhaseType.GAMEPLAY) {
-            return data.hasRole() && data.getRole().hasAbility("clairvoyance");
+            Role role = data.getRole();
+            if (role == null) return false;
+
+            Ability ability = role.getAbility(ClairvoyanceAbility.ID);
+            if (ability == null) return false;
+
+            return ability.canUseAbility(data.getPlayer(), data, AbilityContext.noTarget());
+
         }
 
         return false;
@@ -154,6 +168,28 @@ public class BossBarManager {
             color = BarColor.WHITE;
         }
         return Bukkit.createBossBar("", color, BarStyle.SOLID);
+    }
+
+    /**
+     * Modifie la couleur de la BossBar
+     */
+    private void changeBossBarColor(Player player, PhaseType phase) {
+        BossBar bossBar = playerBossBars.get(player.getUniqueId());
+        if (bossBar == null) return;
+
+        BarColor color;
+        try {
+            color = switch (phase) {
+                case GAMEPLAY -> BarColor.valueOf(gameManager.getSettings().getBossBarColorGameplay());
+                case VOTE -> BarColor.valueOf(gameManager.getSettings().getBossBarColorVote());
+                case null, default -> BarColor.WHITE;
+            };
+        } catch (IllegalArgumentException exception) {
+            color = BarColor.WHITE;
+        }
+
+        bossBar.setColor(color);
+
     }
 
     /**

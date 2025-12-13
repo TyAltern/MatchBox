@@ -1,7 +1,9 @@
 package me.tyalternative.matchbox;
 
-// import me.tyalternative.matchbox.commands.CompositionCommand;
 import me.tyalternative.matchbox.commands.MatchBoxCommand;
+import me.tyalternative.matchbox.composition.CompositionClickHandler;
+import me.tyalternative.matchbox.composition.CompositionCommand;
+import me.tyalternative.matchbox.composition.CompositionGUI;
 import me.tyalternative.matchbox.config.ConfigManager;
 import me.tyalternative.matchbox.core.GameManager;
 import me.tyalternative.matchbox.listeners.*;
@@ -89,10 +91,10 @@ public final class MatchBox extends JavaPlugin {
 //        roleRegistry.register(new Torche());
 
         // Bâtons
-//        roleRegistry.register(new Souffle());
-//        roleRegistry.register(new Cendre());
-//        roleRegistry.register(new Calcine());
-//        roleRegistry.register(new Aurore());
+        roleRegistry.register(new Souffle());
+        roleRegistry.register(new Cendre());
+        roleRegistry.register(new Calcine());
+        roleRegistry.register(new Aurore());
         roleRegistry.register(new Baton());
 
         getLogger().info("→ " + roleRegistry.count() + " rôles enregistrés");
@@ -101,7 +103,7 @@ public final class MatchBox extends JavaPlugin {
         getLogger().info("Enregistrement des commandes...");
 
         getCommand("matchbox").setExecutor(new MatchBoxCommand(gameManager));
-//        getCommand("compo").setExecutor(new CompositionCommand(gameManager));
+        getCommand("compo").setExecutor(new CompositionCommand(gameManager));
 
         getLogger().info("→ Commandes enregistrées");
     }
@@ -115,10 +117,10 @@ public final class MatchBox extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ProjectileListener(gameManager), this);
         getServer().getPluginManager().registerEvents(new ConnectionListener(gameManager), this);
 
-        // Enregistrer le CompositionCommand comme listener aussi (pour le GUI)
-//        CompositionCommand compoCmd = new CompositionCommand(gameManager);
-//        getCommand("compo").setExecutor(compoCmd);
-//        getServer().getPluginManager().registerEvents(compoCmd, this);
+        // Enregistrer le listener du GUI de composition
+        CompositionCommand compoCmd = (CompositionCommand) getCommand("compo").getExecutor();
+        CompositionClickHandler clickHandler = new CompositionClickHandler(getGameManager(), new CompositionGUI(gameManager));
+        getServer().getPluginManager().registerEvents(new CompositionListener(clickHandler), this);
 
         getLogger().info("→ Listeners enregistrés");
     }

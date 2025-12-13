@@ -96,6 +96,11 @@ public class ConfigManager {
         settings.setFlammeJumelleCooldown(config.getInt("cooldowns.flamme_jumelle", 120));
         settings.setFlammeJumelleDuration(config.getInt("cooldowns.flamme_jumelle_duration", 5));
 
+        // Abilities
+        settings.setDoubleSwapEnable(config.getBoolean("abilities.double_swap_detection.enabled", true));
+        settings.setDoubleSwapMaxDelayMs(config.getInt("abilities.double_swap_detection.max_delay_ms", 500));
+        settings.setDoubleSwapCancelFirstSwap(config.getBoolean("abilities.double_swap_detection.cancel_first_swap", true));
+
         // Messages
         settings.setPrefix(config.getString("messages.prefix", "§e[Boite d'Allumettes]"));
 

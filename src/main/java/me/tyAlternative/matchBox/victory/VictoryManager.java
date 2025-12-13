@@ -2,17 +2,12 @@ package me.tyalternative.matchbox.victory;
 
 import me.tyalternative.matchbox.core.GameManager;
 import me.tyalternative.matchbox.events.GameEndEvent;
-import me.tyalternative.matchbox.player.PlayerData;
-import me.tyalternative.matchbox.player.PlayerState;
+import me.tyalternative.matchbox.role.RoleTeam;
 import me.tyalternative.matchbox.role.RoleType;
 import me.tyalternative.matchbox.victory.conditions.*;
-import org.bukkit.GameMode;
-import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 public class VictoryManager {
 
@@ -25,7 +20,7 @@ public class VictoryManager {
 
         // Enregistrer les conditions
         registerCondition(new AllFlammesEliminatedCondition());
-        registerCondition(new LastFlammeStandingCondition());
+        registerCondition(new LastSoloStandingCondition());
     }
 
     public void registerCondition(VictoryCondition condition) {
@@ -39,7 +34,7 @@ public class VictoryManager {
      */
     public boolean checkVictory() {
         for (VictoryCondition condition : conditions) {
-            RoleType winner = condition.check(gameManager);
+            RoleTeam winner = condition.check(gameManager);
 
             if (winner == null) continue;
 
@@ -51,7 +46,7 @@ public class VictoryManager {
 
     }
 
-    private void announceVictory(RoleType winner, String message) {
+    private void announceVictory(RoleTeam winner, String message) {
         gameManager.broadcastMessage("§a§l=============================");
         gameManager.broadcastMessage(message);
         gameManager.broadcastMessage("§a§l=============================");

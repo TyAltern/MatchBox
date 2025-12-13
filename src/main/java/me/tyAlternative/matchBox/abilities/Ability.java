@@ -15,8 +15,11 @@ public abstract class Ability {
     protected final String id;
     protected final String name;
     protected final String description;
+    protected boolean hasCooldown;
     protected final AbilityType type;
     protected final AbilityTrigger trigger;
+
+    protected int ticks = -1;
 
     // Limites d'utilisation
     protected UsageLimit perRoundLimit;
@@ -38,16 +41,40 @@ public abstract class Ability {
 
     }
 
+    public Ability(String id, String name, String description, AbilityType type, AbilityTrigger trigger, int ticks) {
+
+        this.gameManager = MatchBox.getInstance().getGameManager();
+
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.type = type;
+        this.trigger = trigger;
+
+        // Par défaut : illimité
+        this.perRoundLimit = UsageLimit.unlimited();
+        this.perGameLimit = UsageLimit.unlimited();
+
+        if (trigger == AbilityTrigger.TICKS) {
+            this.ticks = ticks;
+        }
+    }
+
+    /**
+     * Vérifie si la capacité peut être utilisée
+     */
+    public boolean canUseAbility(Player player, PlayerData data, AbilityContext context) {
+
+        return hasUsageToUse(player) && canUse(player, data, context);
+    }
+
+    protected abstract boolean canUse(Player player, PlayerData data, AbilityContext context);
+
     /**
      * Exécute la capacité
      * @return true si la capacité a été exécutée avec succès
      */
     public abstract AbilityResult execute(Player player, PlayerData data, AbilityContext context);
-
-    /**
-     * Vérifie si la capacité peut être utilisée
-     */
-    public abstract boolean canUse(Player player, PlayerData data, AbilityContext context);
 
     /**
      * Message d'erreur si la capacité ne peut pas être utilisée
@@ -86,15 +113,23 @@ public abstract class Ability {
         }
     }
 
+    public boolean hasUsageToUse(Player player) {
+
+        if (gameManager.getAbilityUsageManager().getRemainingUses(player.getUniqueId(),id,perRoundLimit) == 0) return false;
+        if (gameManager.getAbilityUsageManager().getRemainingUses(player.getUniqueId(),id,perGameLimit) == 0) return false;
+
+        return true;
+    }
+
 
     /**
      * Message d'erreur pour limite d'utilisation
      */
-    public String getUsageLimitMessage(int remainingRound, int remainingGame) {
-        if (remainingRound == 0 && !perRoundLimit.isUnlimited()) {
+    public String getUsageLimitMessage(Player player, PlayerData data) {
+        if (gameManager.getAbilityUsageManager().getRemainingUses(player.getUniqueId(),id,perRoundLimit) == 0 && !perRoundLimit.isUnlimited()) {
             return "§cVous avez épuisé cette capacité pour cette manche ! (0/" + perRoundLimit.getMaxUses() + ")";
         }
-        if (remainingGame == 0 && !perGameLimit.isUnlimited()) {
+        if (gameManager.getAbilityUsageManager().getRemainingUses(player.getUniqueId(),id,perGameLimit) == 0 && !perGameLimit.isUnlimited()) {
             return "§cVous avez épuisé cette capacité pour cette partie ! (0/" + perGameLimit.getMaxUses() + ")";
         }
         return "§cCapacité indisponible.";
@@ -104,6 +139,7 @@ public abstract class Ability {
     public String getId() { return id; }
     public String getName() { return name; }
     public String getDescription() { return description; }
+    public boolean hasCooldown() { return hasCooldown; }
     public AbilityType getType() { return type; }
     public AbilityTrigger getTrigger() { return trigger; }
 

@@ -4,7 +4,8 @@ public enum EliminationCause {
     EMBRASEMENT_ETINCELLE("Embrasement (Étincelle)"),
     EMBRASEMENT_TORCHE("Embrasement (Torche)"),
     VOTE("Vote"),
-    DISCONNECT("Déconnexion");
+    DISCONNECT("Déconnexion"),
+    UNKNOWN("Inconnu");
 
     private final String displayName;
 

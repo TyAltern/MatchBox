@@ -2,6 +2,11 @@ package me.tyalternative.matchbox.role;
 
 import me.tyalternative.matchbox.player.PlayerData;
 import me.tyalternative.matchbox.abilities.Ability;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.Style;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
@@ -17,15 +22,17 @@ public abstract class AbstractRole implements Role {
     protected final String id;
     protected final String displayName;
     protected final String description;
-    protected final RoleType team;
+    protected final RoleType type;
+    protected RoleTeam team;
     protected final Material guiIcon;
     protected final List<Ability> abilities;
 
     public AbstractRole(String id, String displayName, String description,
-                        RoleType team, Material guiIcon) {
+                        RoleType type, RoleTeam team, Material guiIcon) {
         this.id = id;
         this.displayName = displayName;
         this.description = description;
+        this.type = type;
         this.team = team;
         this.guiIcon = guiIcon;
         this.abilities = new ArrayList<>();
@@ -50,9 +57,20 @@ public abstract class AbstractRole implements Role {
         return description;
     }
 
+
     @Override
-    public RoleType getTeam() {
+    public RoleType getType() {
+        return type;
+    }
+
+    @Override
+    public RoleTeam getTeam() {
         return team;
+    }
+
+    @Override
+    public void setTeam(RoleTeam team) {
+        this.team = team;
     }
 
     @Override
@@ -63,6 +81,16 @@ public abstract class AbstractRole implements Role {
     @Override
     public List<Ability> getAbilities() {
         return new ArrayList<>(abilities);
+    }
+
+    @Override
+    public Ability getAbility(String id) {
+        for (Ability ability : getAbilities()) {
+            if (ability.getId().equals(id)) {
+                return ability;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -115,5 +143,16 @@ public abstract class AbstractRole implements Role {
     @Override
     public String toString() {
         return id;
+    }
+
+
+    protected Component getSpecialAbilityButton() {
+        return Component.text("").append(Component.text("[").append(Component.keybind("key.swapOffhand").append(Component.text("]"))).style(Style.style(TextColor.color(255,85,255))));
+    }
+    protected Component getSpecialAbilityButton(Style style) {
+        return Component.text("").append(Component.text("[").append(Component.keybind("key.swapOffhand").append(Component.text("]"))).style(style.color(TextColor.color(255,85,255))));
+    }
+    protected Component getSpecialAbilityButton(Style style, TextColor color) {
+        return Component.text("").append(Component.text("[").append(Component.keybind("key.swapOffhand").append(Component.text("]"))).style(style.color(TextColor.color(color))));
     }
 }

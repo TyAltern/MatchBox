@@ -15,11 +15,15 @@ public interface Role {
     String getId();
     String getDisplayName();
     String getDescription();
-    RoleType getTeam();
+    RoleType getType();
+    RoleTeam getTeam();
     Material getGuiIcon();
+
+    void setTeam(RoleTeam team);
 
     // Capacités
     List<Ability> getAbilities();
+    Ability getAbility(String abilityId);
     boolean hasAbility(String abilityId);
 
     // Hooks d'événements

@@ -10,9 +10,11 @@ import java.util.*;
 public class VoteManager {
 
     private final GameManager gameManager;
+    private final VoteCalculator voteCalculator;
 
     public VoteManager(GameManager gameManager) {
         this.gameManager = gameManager;
+        this.voteCalculator = new VoteCalculator(gameManager);
     }
 
     public void castVote(UUID voterId, UUID targetId) {
@@ -35,7 +37,7 @@ public class VoteManager {
 
     public UUID calculateResults() {
         List<VoteData> votes = collectVotes();
-        return VoteCalculator.calculateEliminated(gameManager, votes);
+        return voteCalculator.calculateEliminated(votes);
     }
 
     private List<VoteData> collectVotes() {

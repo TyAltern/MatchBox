@@ -1,5 +1,7 @@
 package me.tyalternative.matchbox.role;
 
+import me.tyalternative.matchbox.MatchBox;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Collection;
@@ -22,6 +24,8 @@ public class RoleRegistry {
         if (roles.containsKey(role.getId())) {
             throw new IllegalArgumentException("Rôle déjà enregistré: " + role.getId());
         }
+        MatchBox.getInstance().getLogger().info(" -> " + role.getId() + " enregistré");
+
         roles.put(role.getId(), role);
     }
 

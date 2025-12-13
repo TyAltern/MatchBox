@@ -7,8 +7,11 @@ import me.tyalternative.matchbox.abilities.*;
 import org.bukkit.entity.Player;
 
 public class EmbrasementAbility extends Ability {
+
+    public static String ID = "embrasement";
+
     public EmbrasementAbility() {
-        super("embrasement", "§6Embrasement",
+        super(ID, "§6Embrasement",
                 "Embrase un joueur (éliminé fin de phase)",
                 AbilityType.ACTIVE, AbilityTrigger.RIGHT_CLICK_PLAYER);
 
@@ -18,8 +21,10 @@ public class EmbrasementAbility extends Ability {
     }
 
     @Override
-    public boolean canUse(Player player, PlayerData data, AbilityContext contexte) {
+    protected boolean canUse(Player player, PlayerData data, AbilityContext contexte) {
         if (!contexte.hasTarget() || !contexte.isEmptyHand()) return false;
+
+        if (gameManager.getAbilityUsageManager().getRemainingUses(player.getUniqueId(),id,perRoundLimit) == 0) return false;
 
         PlayerData targetData = gameManager.getPlayerManager().get(contexte.getTarget());
 
@@ -38,10 +43,12 @@ public class EmbrasementAbility extends Ability {
             player.sendMessage("§c✓ Vous avez embrasé " + contexte.getTarget().getName());
             return AbilityResult.success();
         } else {
-            player.sendMessage("erreur");
             return AbilityResult.failure("§cCe joueur est protégé !");
         }
     }
 
-
+    @Override
+    public String getUsageLimitMessage(Player player, PlayerData data) {
+        return "§cVous avez déja utilisé votre Embrasement cette phase !";
+    }
 }

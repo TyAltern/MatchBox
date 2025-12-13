@@ -19,7 +19,6 @@ public class PlayerData {
 
     // Mécaniques de jeu
     private int spectralArrowsRemaining;
-    private int signsRemaining;
 
     // Système de vote
     private UUID votedPlayer;
@@ -103,27 +102,6 @@ public class PlayerData {
     }
 
 
-    // ========== PANNEAUX ==========
-
-    public int getSignsRemaining() {
-        return  signsRemaining;
-    }
-
-    public void setSignsRemaining(int count) {
-        this.signsRemaining = Math.max(0, count);
-    }
-
-    public void addSigns(int count) {
-        this.signsRemaining += count;
-    }
-
-    public boolean useSign() {
-        if (signsRemaining > 0) {
-            signsRemaining--;
-            return true;
-        }
-        return false;
-    }
 
 
     // ========== SYSTÈME DE VOTE ==========
@@ -210,7 +188,6 @@ public class PlayerData {
         state = PlayerState.LOBBY;
         role = null;
         spectralArrowsRemaining = 0;
-        signsRemaining = 0;
         votedPlayer = null;
         voteWeight = 1;
         canVote = true;

@@ -16,6 +16,7 @@ public class GlowingManager {
     public void setPlayerGlow(Player viewer, Player target, ChatColor color) {
 
         try {
+
             glowingEntities.setGlowing(target, viewer, color);
             if (!glowingPlayerMap.containsKey(viewer.getUniqueId()) || glowingPlayerMap.get(viewer.getUniqueId()) == null) {
                 glowingPlayerMap.put(viewer.getUniqueId(), new ArrayList<>());

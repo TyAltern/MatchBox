@@ -52,6 +52,11 @@ public class GameSettings {
     private int flammeJumelleCooldown;
     private int flammeJumelleDuration;
 
+    // Abilities
+    private boolean doubleSwapEnable;
+    private int doubleSwapMaxDelayMs;
+    private boolean doubleSwapCancelFirstSwap;
+
     // Messages
     private String prefix;
 
@@ -104,6 +109,10 @@ public class GameSettings {
     public int getFlammeJumelleCooldown() { return flammeJumelleCooldown; }
     public int getFlammeJumelleDuration() { return flammeJumelleDuration; }
 
+    public boolean getDoubleSwapEnable() { return doubleSwapEnable; }
+    public int getDoubleSwapMaxDelayMs() { return doubleSwapMaxDelayMs; }
+    public boolean getDoubleSwapCancelFirstSwap() { return doubleSwapCancelFirstSwap; }
+
     public String getPrefix() { return prefix; }
 
     public boolean isBossBarEnabled() { return bossBarEnabled; }
@@ -152,6 +161,11 @@ public class GameSettings {
     public void setRayonnementToggleCooldown(int rayonnementToggleCooldown) { this.rayonnementToggleCooldown = rayonnementToggleCooldown; }
     public void setFlammeJumelleCooldown(int flammeJumelleCooldown) { this.flammeJumelleCooldown = flammeJumelleCooldown; }
     public void setFlammeJumelleDuration(int flammeJumelleDuration) { this.flammeJumelleDuration = flammeJumelleDuration; }
+
+
+    public void setDoubleSwapEnable(boolean doubleSwapEnable) { this.doubleSwapEnable = doubleSwapEnable; }
+    public void setDoubleSwapMaxDelayMs(int doubleSwapMaxDelayMs) { this.doubleSwapMaxDelayMs = doubleSwapMaxDelayMs; }
+    public void setDoubleSwapCancelFirstSwap(boolean doubleSwapCancelFirstSwap) { this.doubleSwapCancelFirstSwap = doubleSwapCancelFirstSwap; }
 
     public void setPrefix(String prefix) { this.prefix = prefix; }
 

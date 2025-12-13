@@ -7,6 +7,7 @@ import me.tyalternative.matchbox.abilities.Ability;
 import me.tyalternative.matchbox.abilities.AbilityContext;
 import me.tyalternative.matchbox.abilities.AbilityResult;
 import me.tyalternative.matchbox.abilities.AbilityTrigger;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -90,11 +91,37 @@ public class PlayerInteractionListener implements Listener {
         PlayerData playerData = gameManager.getPlayerManager().get(player);
         if (playerData == null || !playerData.isAlive()) return;
 
-        event.setCancelled(true);
+
+        // Détecter double swap
+        DoubleSwapDetector detector = gameManager.getDoubleSwapDetector();
+        boolean isDoubleSwap = detector.detectDoubleSwap(player.getUniqueId());
 
         boolean emptyHand = player.getInventory().getItemInMainHand().isEmpty();
-        handleAbilityTrigger(playerData, null, AbilityTrigger.SWAP_HAND, emptyHand);
 
+        if (isDoubleSwap) {
+            // Double swap détecté
+            event.setCancelled(true);
+            handleAbilityTrigger(playerData, null, AbilityTrigger.DOUBLE_SWAP_HAND, emptyHand);
+            player.sendMessage("Double swap");
+        } else {
+            // premier swap, on annule et on attend
+            event.setCancelled(true);
+
+            // Planifier le simple swap
+            int delay = gameManager.getSettings().getDoubleSwapMaxDelayMs() / 50;
+            Bukkit.getScheduler().runTaskLater(
+                    gameManager.getPlugin(),
+                    () -> {
+                                // Si toujours pas double swap, alors éxécuter simple swap
+                                if (!detector.hasPendingSwap(player.getUniqueId())) {
+                                    return;
+                                }
+                                player.sendMessage("Simple swap");
+                                handleAbilityTrigger(playerData, null, AbilityTrigger.SWAP_HAND, emptyHand);
+                            },
+                    delay
+            );
+        }
 
     }
 
@@ -121,7 +148,7 @@ public class PlayerInteractionListener implements Listener {
                     (emptyHand ? AbilityContext.ofEmpty(target) : AbilityContext.of(target)) :
                     AbilityContext.noTarget();
 
-            if (ability.canUse(playerData.getPlayer(), playerData, context)) {
+            if (ability.canUseAbility(playerData.getPlayer(), playerData, context)) {
                 AbilityResult result = ability.execute(playerData.getPlayer(), playerData, context);
 
                 if (result.isSuccess() && result.hasMessage()) {
@@ -131,7 +158,12 @@ public class PlayerInteractionListener implements Listener {
                     gameManager.getSoundManager().play(playerData.getPlayer(), "ability_used");
                 }
             } else {
-                String message = ability.getCannotUseMessage(playerData.getPlayer(), playerData);
+                String message;
+                if (!ability.hasUsageToUse(playerData.getPlayer())) {
+                    message = ability.getUsageLimitMessage(playerData.getPlayer(), playerData);
+                } else {
+                    message = ability.getCannotUseMessage(playerData.getPlayer(), playerData);
+                }
                 playerData.getPlayer().sendMessage(message);
             }
         }

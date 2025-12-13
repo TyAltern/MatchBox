@@ -31,7 +31,7 @@ public class SignManager {
     }
 
     public void clearAll() {
-        for (Location location : new ArrayList<>(placedSigns)) {
+        for (Location location : new ArrayList<>(placedSigns).reversed()) {
             if (location.getBlock().getType().toString().contains("SIGN")) {
                 location.getBlock().setType(Material.AIR);
             }

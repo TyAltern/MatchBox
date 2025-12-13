@@ -1,5 +1,7 @@
 package me.tyalternative.matchbox.elimination;
 
+import me.tyalternative.matchbox.abilities.Ability;
+import me.tyalternative.matchbox.abilities.impl.CalcineAbility;
 import me.tyalternative.matchbox.core.GameManager;
 import me.tyalternative.matchbox.events.PlayerEliminatedEvent;
 import me.tyalternative.matchbox.mechanics.embrasement.EmbrasementCause;
@@ -25,39 +27,40 @@ public class EliminationManager {
     public void processEmbrasements() {
         Map<UUID, EmbrasementCause> embrased = gameManager.getEmbrasementManager().getQueue().getAllWithCauses();
 
-        for (Map.Entry<UUID, EmbrasementCause> entry : embrased.entrySet()) {
 
-            if (gameManager.getProtectionManager().isProtected(entry.getKey())) continue;
-
-            EliminationCause cause = getEliminationCause(entry.getValue());
-
-            PlayerData data = gameManager.getPlayerManager().get(entry.getKey());
-            if (data != null && data.hasRole() && data.isAlive()) {
-
-                // Retarde les Calcinés embrasés
-                if (data.getRole().hasAbility("calcine")) {
-                    data.setCustomData("pending_embrasement", true);
-                    data.setCustomData("embrasement_cause", cause);
-                    continue;
-                }
-            }
-
-
-            eliminate(entry.getKey(), cause);
-        }
-
-        // Traiter les Calcinés en attente
         for (PlayerData data : gameManager.getPlayerManager().getAlive()) {
-            if (!data.hasRole()) continue;
 
-            Boolean pending = data.getCustomData("pending_embrasement", Boolean.class);
-            if (Boolean.TRUE.equals(pending)) {
-                EmbrasementCause embrasementCause = data.getCustomData("embrasement_cause", EmbrasementCause.class);
-                EliminationCause cause = getEliminationCause(embrasementCause);
+            if (!data.hasRole() && !data.isAlive()) continue;
+
+            // Traiter les Calcinés en attente
+
+            Ability ability = data.getRole().getAbility(CalcineAbility.ID);
+            if (ability instanceof CalcineAbility calcineAbility && calcineAbility.isUsed()) {
+                EliminationCause cause = calcineAbility.getCause();
+                if (cause == null) cause = EliminationCause.UNKNOWN;
 
                 eliminate(data.getPlayerId(), cause);
-                data.setCustomData("pending_embrasement", false);
+                calcineAbility.setUsed(false);
             }
+
+
+            if (!embrased.containsKey(data.getPlayerId())) continue;
+            if (gameManager.getProtectionManager().isProtected(data.getPlayerId())) continue;
+
+            EliminationCause cause = getEliminationCause(embrased.get(data.getPlayerId()));
+
+            // Process des abilities
+
+            // Retarde les Calcinés embrasés
+            ability = data.getRole().getAbility(CalcineAbility.ID);
+            if (ability instanceof CalcineAbility calcineAbility) {
+                calcineAbility.setUsed(true);
+                calcineAbility.setCause(cause);
+                continue;
+            }
+
+
+            eliminate(data.getPlayerId(), cause);
         }
 
     }
@@ -108,10 +111,14 @@ public class EliminationManager {
 
         // Message
         String roleName = data.hasRole() ? data.getRole().getDisplayName() : "Inconnu";
+        String deathCause = switch (cause) {
+            case VOTE, DISCONNECT -> "§8(" + cause.getDisplayName() + ")";
+            case null, default -> "";
+        };
         if (gameManager.getSettings().shouldRevealRoleOnDeath()) {
-            gameManager.broadcastMessage("§e" + player.getName() + " §7(" + roleName + ") a été éliminé ! §8(" + cause.getDisplayName() + ")");
+            gameManager.broadcastMessage("§e" + player.getName() + " §7(" + roleName + "§7) a été éliminé ! " + deathCause);
         } else {
-            gameManager.broadcastMessage("§e" + player.getName() + " §7a été éliminé ! §8(" + cause.getDisplayName() + ")");
+            gameManager.broadcastMessage("§e" + player.getName() + " §7a été éliminé ! " + deathCause);
         }
 
         gameManager.getSoundManager().playToAll("elimination");

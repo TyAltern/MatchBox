@@ -2,6 +2,7 @@ package me.tyalternative.matchbox.player;
 
 import me.tyalternative.matchbox.MatchBox;
 import me.tyalternative.matchbox.role.RoleType;
+import me.tyalternative.matchbox.role.RoleTeam;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -71,8 +72,42 @@ public class PlayerManager {
 
     public List<PlayerData> getByType(RoleType type) {
         return players.values().stream()
-                .filter(data -> data.hasRole() && data.getRole().getTeam() == type)
+                .filter(data -> data.hasRole() && data.getRole().getType() == type)
                 .collect(Collectors.toList());
+    }
+
+    public List<PlayerData> getAliveByType(RoleType type) {
+        return getAlive().stream()
+                .filter(data -> data.hasRole() && data.getRole().getType() == type)
+                .collect(Collectors.toList());
+    }
+
+    public List<PlayerData> getByTeam(RoleTeam team) {
+        return players.values().stream()
+                .filter(data -> data.hasRole() && data.getRole().getTeam() == team)
+                .collect(Collectors.toList());
+    }
+
+    public List<PlayerData> getAliveByTeam(RoleTeam team) {
+        return getAlive().stream()
+                .filter(data -> data.hasRole() && data.getRole().getTeam() == team)
+                .collect(Collectors.toList());
+    }
+
+    public int countAliveInTeam(RoleTeam team) {
+        return getAliveByTeam(team).size();
+    }
+
+    public List<RoleTeam> getActiveTeam() {
+        List<RoleTeam> activesTeams = new ArrayList<>();
+
+        for (PlayerData data : getAlive()) {
+            RoleTeam team = data.getRole().getTeam();
+
+            if (!activesTeams.contains(team)) activesTeams.add(team);
+        }
+
+        return activesTeams;
     }
 
     public List<PlayerData> getDead() {
