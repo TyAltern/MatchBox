@@ -38,8 +38,9 @@ public abstract class AbstractRole implements Role {
         this.abilities = new ArrayList<>();
     }
 
-    protected void registerAbility(Ability ability) {
+    protected Ability registerAbility(Ability ability) {
         abilities.add(ability);
+        return ability;
     }
 
     @Override
@@ -112,31 +113,49 @@ public abstract class AbstractRole implements Role {
 
     @Override
     public void onGameplayPhaseStart(Player player, PlayerData data) {
+        for (Ability ability : abilities) {
+            ability.onGameplayPhaseStart(player, data);
+        }
         // Override si nécessaire
     }
 
     @Override
     public void onGameplayPhaseEnd(Player player, PlayerData data) {
+        for (Ability ability : abilities) {
+            ability.onGameplayPhaseEnd(player, data);
+        }
         // Override si nécessaire
     }
 
     @Override
     public void onVotePhaseStart(Player player, PlayerData data) {
+        for (Ability ability : abilities) {
+            ability.onVotePhaseStart(player, data);
+        }
         // Override si nécessaire
     }
 
     @Override
     public void onVotePhaseEnd(Player player, PlayerData data) {
+        for (Ability ability : abilities) {
+            ability.onVotePhaseEnd(player, data);
+        }
         // Override si nécessaire
     }
 
     @Override
     public void onEliminated(Player player, PlayerData data, String cause) {
+        for (Ability ability : abilities) {
+            ability.onEliminated(player, data, cause);
+        }
         // Override si nécessaire
     }
 
     @Override
     public void onOtherEliminated(Player self, Player eliminated, String cause) {
+        for (Ability ability : abilities) {
+            ability.onOtherEliminated(self, eliminated, cause);
+        }
         // Override si nécessaire
     }
 

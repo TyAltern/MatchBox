@@ -18,7 +18,6 @@ import org.bukkit.scheduler.BukkitTask;
 
 public class GameplayPhase implements GamePhase {
 
-    private BukkitTask task;
 
     @Override
     public void onStart(GameManager gameManager, PhaseContext context) {
@@ -51,6 +50,9 @@ public class GameplayPhase implements GamePhase {
 
         gameManager.getAbilityUsageManager().resetRoundForAll();
 
+        // Lancement du ticking des TickingAbility
+        gameManager.getTickingAbilityManager().startTicker();
+
         gameManager.broadcastMessage("§bPhase de Gameplay !");
         gameManager.getSoundManager().playToAll("phase_change");
 
@@ -58,6 +60,8 @@ public class GameplayPhase implements GamePhase {
 
     @Override
     public void onEnd(GameManager gameManager, PhaseContext context) {
+        // Arret du ticking des TickingAbility
+        gameManager.getTickingAbilityManager().stopTicker();
 
         // Notifier les rôles
         for (PlayerData data : gameManager.getPlayerManager().getAlive()) {
@@ -128,11 +132,5 @@ public class GameplayPhase implements GamePhase {
     }
 
 
-
-    private void startAbilityTickTask() {
-        task = Bukkit.getScheduler().runTaskTimer(MatchBox.getInstance(),() -> {
-
-        },0, 50L);
-    }
 
 }

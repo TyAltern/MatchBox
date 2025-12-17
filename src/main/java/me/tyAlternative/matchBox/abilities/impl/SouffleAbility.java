@@ -30,6 +30,8 @@ public class SouffleAbility extends Ability {
     public AbilityResult execute(Player player, PlayerData data, AbilityContext context) {
         boolean success = gameManager.getProtectionManager().protect(context.getTarget().getUniqueId(), ProtectionType.SOUFFLE);
 
+        gameManager.getAbilityUsageManager().recordUsage(player.getUniqueId(), id);
+
         if (success) {
             return AbilityResult.success("§b✓ Vous avez protégé " + context.getTarget().getName());
         } else {

@@ -16,6 +16,9 @@ public enum AbilityTrigger {
     /** Automatique (passif) */
     AUTOMATIC,
 
+    /** Tous les x ticks*/
+    TICKS,
+
     /** Manuel via commande/interface */
     MANUAL;
 }

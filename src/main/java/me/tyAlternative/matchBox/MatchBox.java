@@ -88,7 +88,7 @@ public final class MatchBox extends JavaPlugin {
 
         // Flammes
         roleRegistry.register(new Etincelle());
-//        roleRegistry.register(new Torche());
+        roleRegistry.register(new Torche());
 
         // Bâtons
         roleRegistry.register(new Souffle());

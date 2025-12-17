@@ -3,6 +3,7 @@ package me.tyalternative.matchbox.core;
 import me.tyalternative.matchbox.MatchBox;
 import me.tyalternative.matchbox.abilities.AbilityUsageManager;
 import me.tyalternative.matchbox.abilities.CooldownManager;
+import me.tyalternative.matchbox.abilities.TickingAbilityManager;
 import me.tyalternative.matchbox.composition.CompositionManager;
 import me.tyalternative.matchbox.config.GameSettings;
 import me.tyalternative.matchbox.elimination.EliminationManager;
@@ -59,6 +60,7 @@ public class GameManager {
     private final GlowingManager glowingManager;
     private final CooldownManager cooldownManager;
     private final AbilityUsageManager abilityUsageManager;
+    private final TickingAbilityManager tickingAbilityManager;
     private final DoubleSwapDetector doubleSwapDetector;
 
     // Systèmes
@@ -93,6 +95,7 @@ public class GameManager {
         this.glowingManager = new GlowingManager();
         this.cooldownManager = new CooldownManager();
         this.abilityUsageManager = new AbilityUsageManager(this);
+        this.tickingAbilityManager = new TickingAbilityManager(this);
         this.doubleSwapDetector = new DoubleSwapDetector(this);
 
         // Init systèmes
@@ -327,6 +330,7 @@ public class GameManager {
     public GlowingManager getGlowingManager() { return glowingManager; }
     public CooldownManager getCooldownManager() { return cooldownManager; }
     public AbilityUsageManager getAbilityUsageManager() { return abilityUsageManager; }
+    public TickingAbilityManager getTickingAbilityManager() { return tickingAbilityManager; }
     public DoubleSwapDetector getDoubleSwapDetector() { return doubleSwapDetector; }
 
     public EliminationManager getEliminationManager() { return eliminationManager; }

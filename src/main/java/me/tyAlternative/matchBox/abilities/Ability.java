@@ -143,11 +143,39 @@ public abstract class Ability {
     public AbilityType getType() { return type; }
     public AbilityTrigger getTrigger() { return trigger; }
 
+    public int getTicks() { return ticks; }
+
     public UsageLimit getPerRoundLimit() { return perRoundLimit; }
     public UsageLimit getPerGameLimit() { return perGameLimit; }
 
     public boolean hasUsageLimit() {
         return (perRoundLimit != null && !perRoundLimit.isUnlimited()) ||
                 (perGameLimit != null && !perGameLimit.isUnlimited());
+    }
+
+
+
+    public void onGameplayPhaseStart(Player player, PlayerData data) {
+        // Override si nécessaire
+    }
+
+    public void onGameplayPhaseEnd(Player player, PlayerData data) {
+        // Override si nécessaire
+    }
+
+    public void onVotePhaseStart(Player player, PlayerData data) {
+        // Override si nécessaire
+    }
+
+    public void onVotePhaseEnd(Player player, PlayerData data) {
+        // Override si nécessaire
+    }
+
+    public void onEliminated(Player player, PlayerData data, String cause) {
+        // Override si nécessaire
+    }
+
+    public void onOtherEliminated(Player self, Player eliminated, String cause) {
+        // Override si nécessaire
     }
 }
