@@ -12,8 +12,8 @@ public class CalcineAbility extends Ability {
     private boolean used = false;
 
     public CalcineAbility() {
-        super(ID, "§8Calciné",
-                "Retarde le premier Embrasement",
+        super(ID, "Calciné",
+                "Vous retardez votre §cEmbrasement§f par §cles Flammes§f d'une manche. Vous n'êtes cependant pas au courant de votre §cEmbrasement§f.",
                 AbilityType.PASSIVE, AbilityTrigger.AUTOMATIC);
     }
 
@@ -23,7 +23,7 @@ public class CalcineAbility extends Ability {
     }
 
     @Override
-    public AbilityResult execute(Player player, PlayerData data, AbilityContext context) {
+    protected AbilityResult execute(Player player, PlayerData data, AbilityContext context) {
         return AbilityResult.success();
     }
 

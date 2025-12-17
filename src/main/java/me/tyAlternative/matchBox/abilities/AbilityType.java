@@ -1,15 +1,26 @@
 package me.tyalternative.matchbox.abilities;
 
 public enum AbilityType {
+
     /** Capacité active nécessitant une action du joueur */
-    ACTIVE,
+    ACTIVE("Actif"),
 
     /** Capacité passive toujours active */
-    PASSIVE,
+    PASSIVE("Passif"),
 
     /** Capacité pouvant être activée/désactivée */
-    TOGGLE,
+    TOGGLE("Toggle"),
 
     /** Capacité utilisable uniquement pendant les votes */
-    VOTE;
+    VOTE("Vote");
+
+    private String displayName;
+
+    AbilityType(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
 }

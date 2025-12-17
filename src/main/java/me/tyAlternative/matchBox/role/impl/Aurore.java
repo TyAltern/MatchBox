@@ -15,22 +15,22 @@ public class Aurore extends AbstractRole {
 
     public Aurore() {
         super(ID, "§d§lL'Aurore",
-                "Voit le temps restant de la phase.",
+                "Vous êtes un être rempli de sagesse. Eliminez §cles Flammes§f et gagnez avec les autres §eBâtons§f.",
                 RoleType.BATON, RoleTeam.BATONS, Material.MAGENTA_STAINED_GLASS_PANE);
 
         registerAbility(new ClairvoyanceAbility());
     }
 
-    @Override
-    public void onAssigned(Player player, PlayerData data) {
-        player.sendMessage(Component.text("§8§m§l----------§r§8§l / Role / §m----------").appendNewline()
-                .appendNewline()
-                .append(Component.text("§r§8§l- §r§7Vous êtes §d§nL'Aurore")).appendNewline()
-                .append(Component.text("§r§8§l- §r§7Objectif : §r§fVous êtes un être rempli de sagesse. Eliminez §cles Flammes§f et gagnez avec les autres §eBâtons§f.")).appendNewline()
-                .appendNewline()
-                .append(Component.text("§r§8§l- §r§7Pour ce faire vous disposez d'une capacité:")).appendNewline()
-                .append(Component.text("§6§n§lClairvoyance:§r§f Vous connaissez la durée restante de la phase de Gameplay en cours. §8(Passif)")).appendNewline()
-                .appendNewline()
-        );
-    }
+//    @Override
+//    public void onAssigned(Player player, PlayerData data) {
+//        player.sendMessage(Component.text("§8§m§l----------§r§8§l / Role / §m----------").appendNewline()
+//                .appendNewline()
+//                .append(Component.text("§r§8§l- §r§7Vous êtes §d§nL'Aurore")).appendNewline()
+//                .append(Component.text("§r§8§l- §r§7Objectif : §r§fVous êtes un être rempli de sagesse. Eliminez §cles Flammes§f et gagnez avec les autres §eBâtons§f.")).appendNewline()
+//                .appendNewline()
+//                .append(Component.text("§r§8§l- §r§7Pour ce faire vous disposez d'une capacité:")).appendNewline()
+//                .append(Component.text("§6§n§lClairvoyance:§r§f Vous connaissez la durée restante de la phase de Gameplay en cours. §8(Passif)")).appendNewline()
+//                .appendNewline()
+//        );
+//    }
 }

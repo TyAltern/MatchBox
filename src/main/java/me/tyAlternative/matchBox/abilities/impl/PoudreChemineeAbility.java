@@ -17,8 +17,8 @@ public class PoudreChemineeAbility extends Ability{
     private final CooldownManager cooldownManager;
 
     public PoudreChemineeAbility() {
-        super(ID, "§dPoudre de cheminée",
-                "Échange de position (CD: 20s)",
+        super(ID, "Poudre de cheminée",
+                "Vous pouvez échanger votre position avec celle d'un autre joueur toutes les §6x §fsecondes.",
                 AbilityType.ACTIVE, AbilityTrigger.SWAP_HAND);
 
         hasCooldown = true;
@@ -39,7 +39,7 @@ public class PoudreChemineeAbility extends Ability{
     }
 
     @Override
-    public AbilityResult execute(Player player, PlayerData data, AbilityContext context) {
+    protected AbilityResult execute(Player player, PlayerData data, AbilityContext context) {
         List<PlayerData> victims = getPossibleVictims(player);
         if (victims.isEmpty()) return AbilityResult.success("Pas de cible possible pour le tp");
 
@@ -78,4 +78,8 @@ public class PoudreChemineeAbility extends Ability{
     }
 
 
+    @Override
+    public String getDescription() {
+        return "Vous pouvez échanger votre position avec celle d'un autre joueur toutes les §6" + gameManager.getSettings().getPoudreChemineeCooldown() + " §fsecondes.";
+    }
 }

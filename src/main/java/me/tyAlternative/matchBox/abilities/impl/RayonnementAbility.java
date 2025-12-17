@@ -19,8 +19,8 @@ public class RayonnementAbility extends Ability {
     private final int minimumTime = 5;
 
     public RayonnementAbility() {
-        super(ID, "§6Rayonnement",
-                "Embrase le joueur résté le plus proche du round",
+        super(ID, "Rayonnement",
+                "A chaque phase de Gameplay, le joueur étant resté le plus longtemps dans un rayon de §7x §r blocs de vous, sera éliminé à la fin de cette phase.",
                 AbilityType.PASSIVE, AbilityTrigger.TICKS, 20);
 
         rayonnementTarget = new HashMap<>();
@@ -34,7 +34,7 @@ public class RayonnementAbility extends Ability {
     }
 
     @Override
-    public AbilityResult execute(Player player, PlayerData data, AbilityContext context) {
+    protected AbilityResult execute(Player player, PlayerData data, AbilityContext context) {
 
         Location playerLocation = player.getLocation();
 
@@ -80,5 +80,10 @@ public class RayonnementAbility extends Ability {
 
     public double getRayonnementRadius() {
         return rayonnementRadius;
+    }
+
+    @Override
+    public String getDescription() {
+        return "A chaque phase de Gameplay, le joueur étant resté le plus longtemps dans un rayon de §7" +  getRayonnementRadius() + "§r blocs de vous, sera éliminé à la fin de cette phase.";
     }
 }

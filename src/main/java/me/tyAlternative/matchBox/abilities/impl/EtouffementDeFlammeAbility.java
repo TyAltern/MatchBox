@@ -8,9 +8,9 @@ public class EtouffementDeFlammeAbility extends Ability {
     public static String ID = "etouffement_de_flamme";
 
     public EtouffementDeFlammeAbility() {
-        super(ID, "§6Étouffement de Flamme",
-                "Désactive Rayonnement 1 manche",
-                AbilityType.TOGGLE, AbilityTrigger.SWAP_HAND);
+        super(ID, "Étouffement de Flamme",
+                "Vous pouvez décider d'abandonner votre §6Rayonnement §fpour un tour.",
+                AbilityType.ACTIVE, AbilityTrigger.SWAP_HAND);
 
         setUsageRoundLimits(1);
     }
@@ -23,7 +23,7 @@ public class EtouffementDeFlammeAbility extends Ability {
     }
 
     @Override
-    public AbilityResult execute(Player player, PlayerData data, AbilityContext context) {
+    protected AbilityResult execute(Player player, PlayerData data, AbilityContext context) {
         data.setCustomData("rayonnement_actif" , false);
 
         player.sendMessage("§6Vous avez Étouffé votre Flamme");

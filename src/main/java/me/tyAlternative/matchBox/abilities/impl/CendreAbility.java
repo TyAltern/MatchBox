@@ -10,8 +10,8 @@ public class CendreAbility extends Ability{
     public static String ID = "cendre";
 
     public CendreAbility() {
-        super(ID, "§7Cendre",
-                "Résistance Poudre de cheminée",
+        super(ID, "Cendre",
+                "Vous possédez une protection contre la §6Poudre de cheminée§f de §cl'Etincelle§f.",
                 AbilityType.PASSIVE, AbilityTrigger.AUTOMATIC);
     }
 
@@ -21,7 +21,7 @@ public class CendreAbility extends Ability{
     }
 
     @Override
-    public AbilityResult execute(Player player, PlayerData data, AbilityContext context) {
+    protected AbilityResult execute(Player player, PlayerData data, AbilityContext context) {
         return AbilityResult.success();
     }
 

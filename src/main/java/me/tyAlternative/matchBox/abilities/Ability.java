@@ -19,6 +19,8 @@ public abstract class Ability {
     protected final AbilityType type;
     protected final AbilityTrigger trigger;
 
+    protected boolean isDrunk;
+
     protected int ticks = -1;
 
     // Limites d'utilisation
@@ -74,7 +76,40 @@ public abstract class Ability {
      * Exécute la capacité
      * @return true si la capacité a été exécutée avec succès
      */
-    public abstract AbilityResult execute(Player player, PlayerData data, AbilityContext context);
+
+    public AbilityResult executeAbility(Player player, PlayerData data, AbilityContext context) {
+        if (isDrunk()) {
+            return executeDrunk(player, data, context);
+        }
+
+        return execute(player, data, context);
+
+    }
+
+    protected abstract AbilityResult execute(Player player, PlayerData data, AbilityContext context);
+
+
+    // ========== DRUNK MANAGEMENT ==========
+
+    protected AbilityResult executeDrunk(Player player, PlayerData data, AbilityContext context) {
+        return execute(player, data, context);
+    }
+    /**
+     * Définit si la capacité peut être fausse. Par défaut retourne False. Override si ce n'est pas le cas.
+     */
+    public boolean canBeDrunk() {
+        return false;
+    }
+
+    public boolean isDrunk() {
+        return canBeDrunk() && this.isDrunk;
+    }
+
+    public void setDrunk(boolean isDrunk) {
+        this.isDrunk = isDrunk;
+    }
+
+
 
     /**
      * Message d'erreur si la capacité ne peut pas être utilisée
@@ -154,6 +189,16 @@ public abstract class Ability {
     }
 
 
+
+
+
+
+    // ========== EVENTS LISTENERS ==========
+
+
+    public void onAssigned(Player player, PlayerData data) {
+        // Override si nécessaire
+    }
 
     public void onGameplayPhaseStart(Player player, PlayerData data) {
         // Override si nécessaire

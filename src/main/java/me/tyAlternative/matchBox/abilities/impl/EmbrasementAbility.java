@@ -11,8 +11,8 @@ public class EmbrasementAbility extends Ability {
     public static String ID = "embrasement";
 
     public EmbrasementAbility() {
-        super(ID, "§6Embrasement",
-                "Embrase un joueur (éliminé fin de phase)",
+        super(ID, "Embrasement",
+                "A chaque phase de Gameplay, vous pouvez clic droit sur un joueur avec une main vide. Ce dernier sera éliminé à la fin de cette phase.",
                 AbilityType.ACTIVE, AbilityTrigger.RIGHT_CLICK_PLAYER);
 
 
@@ -33,7 +33,7 @@ public class EmbrasementAbility extends Ability {
 
 
     @Override
-    public AbilityResult execute(Player player, PlayerData data, AbilityContext contexte) {
+    protected AbilityResult execute(Player player, PlayerData data, AbilityContext contexte) {
         boolean success = gameManager.getEmbrasementManager()
                 .embrase(contexte.getTarget().getUniqueId(), EmbrasementCause.ETINCELLE);
 

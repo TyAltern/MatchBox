@@ -54,7 +54,7 @@ public class TickingAbilityManager {
 
                         if (ability.canUseAbility(playerData.getPlayer(), playerData, context)) {
 
-                            ability.execute(playerData.getPlayer(), playerData, context);
+                            ability.executeAbility(playerData.getPlayer(), playerData, context);
                         }
                     }
                 }

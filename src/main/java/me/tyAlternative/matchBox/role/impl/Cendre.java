@@ -15,22 +15,22 @@ public class Cendre extends AbstractRole {
 
     public Cendre() {
         super(ID, "§7§lLa Cendre",
-                "Résiste à la Poudre de cheminée.",
+                "Vous êtes l'âme d'une ancienne §cEtincelle§f, certains de ses pouvoirs ne vous font pas effet. Eliminez §cles Flammes§f et gagnez avec les autres §eBâtons§f.",
                 RoleType.BATON, RoleTeam.BATONS, Material.GUNPOWDER);
 
         registerAbility(new CendreAbility());
     }
 
-    @Override
-    public void onAssigned(Player player, PlayerData data) {
-        player.sendMessage(Component.text("§8§m§l----------§r§8§l / Role / §m----------").appendNewline()
-                .appendNewline()
-                .append(Component.text("§r§8§l- §r§7Vous êtes §8§nLa Cendre")).appendNewline()
-                .append(Component.text("§r§8§l- §r§7Objectif : §r§fVous êtes l'âme d'une ancienne §cEtincelle§f, certains de ses pouvoirs ne vous font pas effet. Eliminez §cles Flammes§f et gagnez avec les autres §eBâtons§f.")).appendNewline()
-                .appendNewline()
-                .append(Component.text("§r§8§l- §r§7Pour ce faire vous disposez d'une capacité:")).appendNewline()
-                .append(Component.text("§6§n§lCendre:§r§f Vous possédez une protection contre la §6Poudre de cheminée§f de §cl'Etincelle§f. §8(passif)")).appendNewline()
-                .appendNewline()
-        );
-    }
+//    @Override
+//    public void onAssigned(Player player, PlayerData data) {
+//        player.sendMessage(Component.text("§8§m§l----------§r§8§l / Role / §m----------").appendNewline()
+//                .appendNewline()
+//                .append(Component.text("§r§8§l- §r§7Vous êtes §8§nLa Cendre")).appendNewline()
+//                .append(Component.text("§r§8§l- §r§7Objectif : §r§fVous êtes l'âme d'une ancienne §cEtincelle§f, certains de ses pouvoirs ne vous font pas effet. Eliminez §cles Flammes§f et gagnez avec les autres §eBâtons§f.")).appendNewline()
+//                .appendNewline()
+//                .append(Component.text("§r§8§l- §r§7Pour ce faire vous disposez d'une capacité:")).appendNewline()
+//                .append(Component.text("§6§n§lCendre:§r§f Vous possédez une protection contre la §6Poudre de cheminée§f de §cl'Etincelle§f. §8(passif)")).appendNewline()
+//                .appendNewline()
+//        );
+//    }
 }

@@ -9,8 +9,8 @@ public class ClairvoyanceAbility extends Ability {
     public static String ID = "clairvoyance";
 
     public ClairvoyanceAbility() {
-        super(ID, "§dClairvoyance",
-                "Voit le temps restant",
+        super(ID, "Clairvoyance",
+                "Vous connaissez la durée restante de la phase de Gameplay en cours.",
                 AbilityType.PASSIVE, AbilityTrigger.AUTOMATIC);
     }
 
@@ -20,7 +20,7 @@ public class ClairvoyanceAbility extends Ability {
     }
 
     @Override
-    public AbilityResult execute(Player player, PlayerData data, AbilityContext ctx) {
+    protected AbilityResult execute(Player player, PlayerData data, AbilityContext ctx) {
         return AbilityResult.success();
     }
 

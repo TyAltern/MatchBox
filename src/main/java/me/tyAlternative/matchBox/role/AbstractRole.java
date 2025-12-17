@@ -1,5 +1,6 @@
 package me.tyalternative.matchbox.role;
 
+import me.tyalternative.matchbox.abilities.AbilityTrigger;
 import me.tyalternative.matchbox.player.PlayerData;
 import me.tyalternative.matchbox.abilities.Ability;
 import net.kyori.adventure.text.Component;
@@ -40,6 +41,10 @@ public abstract class AbstractRole implements Role {
 
     protected Ability registerAbility(Ability ability) {
         abilities.add(ability);
+        return ability;
+    }
+
+    protected Ability registerDrunkAbility(Ability ability) {
         return ability;
     }
 
@@ -104,11 +109,12 @@ public abstract class AbstractRole implements Role {
 
     @Override
     public void onAssigned(Player player, PlayerData data) {
-        player.sendMessage("§8" + "=".repeat(50));
-        player.sendMessage("§e[Boite d'Allumettes] §7Vous êtes §r" + displayName);
-        player.sendMessage("");
-        player.sendMessage("§7" + description);
-        player.sendMessage("§8" + "=".repeat(50));
+        for (Ability ability : abilities) {
+            ability.onAssigned(player, data);
+        }
+
+
+        sendRoleDescription(player);
     }
 
     @Override
@@ -159,14 +165,45 @@ public abstract class AbstractRole implements Role {
         // Override si nécessaire
     }
 
+
+
     @Override
     public String toString() {
         return id;
     }
 
 
+    protected void sendRoleDescription(Player player) {
+        int abilitiesNumber = getAbilities().size();
+        Component rolePresentation = Component.text("§8§m§l----------§r§8§l / Role / §m----------").appendNewline()
+                .appendNewline()
+                .append(Component.text("§r§8§l- §r§7Vous êtes " + getDisplayName())).appendNewline()
+                .append(Component.text("§r§8§l- §r§7Objectif : §r" + getDescription())).appendNewline()
+                .appendNewline();
+
+        if (abilitiesNumber > 0){
+            rolePresentation = rolePresentation.append(Component.text("§r§8§l- §r§7Pour ce faire vous disposez de " + abilitiesNumber + " capacité" + (abilitiesNumber > 1 ? "s" : "") + ":"));
+
+            for (Ability ability : getAbilities()) {
+                rolePresentation = rolePresentation.appendNewline().append(Component.text("§6§n§l" + ability.getName() + ":§r§f " + ability.getDescription() + " §8(" + ability.getType().getDisplayName() + ") "));
+                if (ability.getTrigger() == AbilityTrigger.SWAP_HAND)
+                    rolePresentation = rolePresentation.append(getSpecialAbilityButton());
+                if (ability.getTrigger() == AbilityTrigger.DOUBLE_SWAP_HAND)
+                    rolePresentation = rolePresentation.append(getSpecialAbilityButton2());
+            }
+            rolePresentation = rolePresentation.appendNewline().appendNewline();
+        }
+
+        player.sendMessage(rolePresentation);
+
+    }
+
+
     protected Component getSpecialAbilityButton() {
         return Component.text("").append(Component.text("[").append(Component.keybind("key.swapOffhand").append(Component.text("]"))).style(Style.style(TextColor.color(255,85,255))));
+    }
+    protected Component getSpecialAbilityButton2() {
+        return Component.text("").append(Component.text("[2x ").append(Component.keybind("key.swapOffhand").append(Component.text("]"))).style(Style.style(TextColor.color(255,85,255))));
     }
     protected Component getSpecialAbilityButton(Style style) {
         return Component.text("").append(Component.text("[").append(Component.keybind("key.swapOffhand").append(Component.text("]"))).style(style.color(TextColor.color(255,85,255))));

@@ -149,7 +149,7 @@ public class PlayerInteractionListener implements Listener {
                     AbilityContext.noTarget();
 
             if (ability.canUseAbility(playerData.getPlayer(), playerData, context)) {
-                AbilityResult result = ability.execute(playerData.getPlayer(), playerData, context);
+                AbilityResult result = ability.executeAbility(playerData.getPlayer(), playerData, context);
 
                 if (result.isSuccess() && result.hasMessage()) {
                     playerData.getPlayer().sendMessage(result.getMessage());

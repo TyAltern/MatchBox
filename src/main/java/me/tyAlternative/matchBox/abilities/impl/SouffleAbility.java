@@ -10,8 +10,8 @@ public class SouffleAbility extends Ability {
     public static String ID = "souffle";
 
     public SouffleAbility() {
-        super(ID, "§bSouffle",
-                "Protège contre l'Embrasement",
+        super(ID, "Souffle",
+                "A chaque phase de Gameplay, vous pouvez clic droit sur un joueur avec une main vide. Ce dernier sera protégé contre l'§cEmbrasement§r§f des §cFlammes§f.",
                 AbilityType.ACTIVE, AbilityTrigger.RIGHT_CLICK_PLAYER);
 
         setUsageRoundLimits(1);
@@ -27,7 +27,7 @@ public class SouffleAbility extends Ability {
     }
 
     @Override
-    public AbilityResult execute(Player player, PlayerData data, AbilityContext context) {
+    protected AbilityResult execute(Player player, PlayerData data, AbilityContext context) {
         boolean success = gameManager.getProtectionManager().protect(context.getTarget().getUniqueId(), ProtectionType.SOUFFLE);
 
         gameManager.getAbilityUsageManager().recordUsage(player.getUniqueId(), id);
