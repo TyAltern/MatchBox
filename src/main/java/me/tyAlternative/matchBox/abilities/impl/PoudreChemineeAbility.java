@@ -1,6 +1,5 @@
 package me.tyalternative.matchbox.abilities.impl;
 
-import me.tyalternative.matchbox.MatchBox;
 import me.tyalternative.matchbox.player.PlayerData;
 import me.tyalternative.matchbox.abilities.*;
 import me.tyalternative.matchbox.role.Role;
@@ -19,7 +18,7 @@ public class PoudreChemineeAbility extends Ability{
     public PoudreChemineeAbility() {
         super(ID, "Poudre de cheminée",
                 "Vous pouvez échanger votre position avec celle d'un autre joueur toutes les §6x §fsecondes.",
-                AbilityType.ACTIVE, AbilityTrigger.SWAP_HAND);
+                AbilityCategory.CAPACITY, AbilityUseType.ACTIVE, AbilityTrigger.SWAP_HAND);
 
         hasCooldown = true;
         this.cooldownManager = new CooldownManager();
@@ -77,6 +76,10 @@ public class PoudreChemineeAbility extends Ability{
         return possibleVictims;
     }
 
+    @Override
+    public boolean canBeDrunk() {
+        return true;
+    }
 
     @Override
     public String getDescription() {

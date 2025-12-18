@@ -9,13 +9,16 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 public class Calcine extends AbstractRole {
 
-    public static String ID = "CALCINE";
+    public static final String ID = "CALCINE";
+    public static final String DISPLAY_NAME = "§4§lLe Calciné";
+    public static final String DESCRIPTION = "Rescapé d'un précédent §cEmbrasement§f, la douleur vous est maintenant supportable. Cependant, pas pour longtemps. Vengez vous, éliminez §cles Flammes§f et gagnez avec les autres §eBâtons§f.";
 
     public Calcine() {
-        super(ID, "§4§lLe Calciné",
-                "Rescapé d'un précédent §cEmbrasement§f, la douleur vous est maintenant supportable. Cependant, pas pour longtemps. Vengez vous, éliminez §cles Flammes§f et gagnez avec les autres §eBâtons§f.",
+        super(ID, DISPLAY_NAME, DESCRIPTION,
                 RoleType.BATON, RoleTeam.BATONS, Material.GRAY_CONCRETE_POWDER);
 
         registerAbility(new CalcineAbility());

@@ -6,6 +6,12 @@ public enum RoleTeam {
      */
     SOLITAIRE("Solitaire", "Vous devez gagner seul"),
 
+
+    /**
+     * Duo de Flammes (gagnent ensemble)
+     */
+    SILEX_ACIER("Silex et Acier", "Un duo prêt à tout enflammer"),
+
     /**
      * Team des Bâtons (gagnent ensemble)
      */

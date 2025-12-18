@@ -1,6 +1,9 @@
 package me.tyalternative.matchbox.role;
 
+import me.tyalternative.matchbox.MatchBox;
 import me.tyalternative.matchbox.abilities.AbilityTrigger;
+import me.tyalternative.matchbox.abilities.impl.AmnesieAbility;
+import me.tyalternative.matchbox.core.GameManager;
 import me.tyalternative.matchbox.player.PlayerData;
 import me.tyalternative.matchbox.abilities.Ability;
 import net.kyori.adventure.text.Component;
@@ -19,6 +22,7 @@ import java.util.List;
  * Implémente les comportements par défaut
  */
 public abstract class AbstractRole implements Role {
+    protected final GameManager gameManager;
 
     protected final String id;
     protected final String displayName;
@@ -37,14 +41,27 @@ public abstract class AbstractRole implements Role {
         this.team = team;
         this.guiIcon = guiIcon;
         this.abilities = new ArrayList<>();
+
+        this.gameManager = MatchBox.getInstance().getGameManager();
     }
 
-    protected Ability registerAbility(Ability ability) {
+    @Override
+    public Ability registerAbility(Ability ability) {
         abilities.add(ability);
         return ability;
     }
 
-    protected Ability registerDrunkAbility(Ability ability) {
+    @Override
+    public Ability registerHiddenAbility(Ability ability) {
+        ability.setInvisible(true);
+        abilities.add(ability);
+        return ability;
+    }
+
+    @Override
+    public Ability registerDrunkAbility(Ability ability) {
+        ability.setDrunk(true);
+        abilities.add(ability);
         return ability;
     }
 
@@ -109,12 +126,19 @@ public abstract class AbstractRole implements Role {
 
     @Override
     public void onAssigned(Player player, PlayerData data) {
-        for (Ability ability : abilities) {
+        boolean amnesia = false;
+
+        List<Ability> abilityList = new ArrayList<>(abilities);
+
+        for (Ability ability : abilityList) {
             ability.onAssigned(player, data);
+            if (ability instanceof AmnesieAbility amnesieAbility) {
+                amnesia = true;
+            }
         }
 
+        if (!amnesia) sendRoleDescription(player);
 
-        sendRoleDescription(player);
     }
 
     @Override
@@ -174,41 +198,8 @@ public abstract class AbstractRole implements Role {
 
 
     protected void sendRoleDescription(Player player) {
-        int abilitiesNumber = getAbilities().size();
-        Component rolePresentation = Component.text("§8§m§l----------§r§8§l / Role / §m----------").appendNewline()
-                .appendNewline()
-                .append(Component.text("§r§8§l- §r§7Vous êtes " + getDisplayName())).appendNewline()
-                .append(Component.text("§r§8§l- §r§7Objectif : §r" + getDescription())).appendNewline()
-                .appendNewline();
-
-        if (abilitiesNumber > 0){
-            rolePresentation = rolePresentation.append(Component.text("§r§8§l- §r§7Pour ce faire vous disposez de " + abilitiesNumber + " capacité" + (abilitiesNumber > 1 ? "s" : "") + ":"));
-
-            for (Ability ability : getAbilities()) {
-                rolePresentation = rolePresentation.appendNewline().append(Component.text("§6§n§l" + ability.getName() + ":§r§f " + ability.getDescription() + " §8(" + ability.getType().getDisplayName() + ") "));
-                if (ability.getTrigger() == AbilityTrigger.SWAP_HAND)
-                    rolePresentation = rolePresentation.append(getSpecialAbilityButton());
-                if (ability.getTrigger() == AbilityTrigger.DOUBLE_SWAP_HAND)
-                    rolePresentation = rolePresentation.append(getSpecialAbilityButton2());
-            }
-            rolePresentation = rolePresentation.appendNewline().appendNewline();
-        }
-
-        player.sendMessage(rolePresentation);
-
+        gameManager.getMessageManager().sendRoleDescription(player, getDisplayName(), getDescription(), getAbilities());
     }
 
 
-    protected Component getSpecialAbilityButton() {
-        return Component.text("").append(Component.text("[").append(Component.keybind("key.swapOffhand").append(Component.text("]"))).style(Style.style(TextColor.color(255,85,255))));
-    }
-    protected Component getSpecialAbilityButton2() {
-        return Component.text("").append(Component.text("[2x ").append(Component.keybind("key.swapOffhand").append(Component.text("]"))).style(Style.style(TextColor.color(255,85,255))));
-    }
-    protected Component getSpecialAbilityButton(Style style) {
-        return Component.text("").append(Component.text("[").append(Component.keybind("key.swapOffhand").append(Component.text("]"))).style(style.color(TextColor.color(255,85,255))));
-    }
-    protected Component getSpecialAbilityButton(Style style, TextColor color) {
-        return Component.text("").append(Component.text("[").append(Component.keybind("key.swapOffhand").append(Component.text("]"))).style(style.color(TextColor.color(color))));
-    }
 }

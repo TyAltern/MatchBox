@@ -10,7 +10,7 @@ public class EtouffementDeFlammeAbility extends Ability {
     public EtouffementDeFlammeAbility() {
         super(ID, "Étouffement de Flamme",
                 "Vous pouvez décider d'abandonner votre §6Rayonnement §fpour un tour.",
-                AbilityType.ACTIVE, AbilityTrigger.SWAP_HAND);
+                AbilityCategory.CAPACITY, AbilityUseType.ACTIVE, AbilityTrigger.SWAP_HAND);
 
         setUsageRoundLimits(1);
     }
@@ -29,6 +29,19 @@ public class EtouffementDeFlammeAbility extends Ability {
         player.sendMessage("§6Vous avez Étouffé votre Flamme");
 
         gameManager.getAbilityUsageManager().recordUsage(player.getUniqueId(), id);
+
+        return AbilityResult.success();
+    }
+
+    @Override
+    public boolean canBeDrunk() {
+        return true;
+    }
+
+    @Override
+    protected AbilityResult executeDrunk(Player player, PlayerData data, AbilityContext context) {
+        gameManager.getAbilityUsageManager().recordUsage(player.getUniqueId(), id);
+        player.sendMessage("§6Vous avez Étouffé votre Flamme");
 
         return AbilityResult.success();
     }

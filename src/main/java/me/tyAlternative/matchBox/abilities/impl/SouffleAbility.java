@@ -12,7 +12,7 @@ public class SouffleAbility extends Ability {
     public SouffleAbility() {
         super(ID, "Souffle",
                 "A chaque phase de Gameplay, vous pouvez clic droit sur un joueur avec une main vide. Ce dernier sera protégé contre l'§cEmbrasement§r§f des §cFlammes§f.",
-                AbilityType.ACTIVE, AbilityTrigger.RIGHT_CLICK_PLAYER);
+                AbilityCategory.CAPACITY, AbilityUseType.ACTIVE, AbilityTrigger.RIGHT_CLICK_PLAYER);
 
         setUsageRoundLimits(1);
     }
@@ -38,6 +38,17 @@ public class SouffleAbility extends Ability {
             return AbilityResult.failure("§cCe joueur est déjà protégé !");
         }
 
+    }
+
+    @Override
+    public boolean canBeDrunk() {
+        return true;
+    }
+
+    @Override
+    protected AbilityResult executeDrunk(Player player, PlayerData data, AbilityContext context) {
+        gameManager.getAbilityUsageManager().recordUsage(player.getUniqueId(), id);
+        return AbilityResult.success("§b✓ Vous avez protégé " + context.getTarget().getName());
     }
 
     @Override

@@ -9,13 +9,16 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 public class Cendre extends AbstractRole {
 
-    public static String ID = "CENDRE";
+    public static final String ID = "CENDRE";
+    public static final String DISPLAY_NAME = "§7§lLa Cendre";
+    public static final String DESCRIPTION = "Vous êtes l'âme d'une ancienne §cEtincelle§f, certains de ses pouvoirs ne vous font pas effet. Eliminez §cles Flammes§f et gagnez avec les autres §eBâtons§f.";
 
     public Cendre() {
-        super(ID, "§7§lLa Cendre",
-                "Vous êtes l'âme d'une ancienne §cEtincelle§f, certains de ses pouvoirs ne vous font pas effet. Eliminez §cles Flammes§f et gagnez avec les autres §eBâtons§f.",
+        super(ID, DISPLAY_NAME, DESCRIPTION,
                 RoleType.BATON, RoleTeam.BATONS, Material.GUNPOWDER);
 
         registerAbility(new CendreAbility());

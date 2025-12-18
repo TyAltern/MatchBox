@@ -1,28 +1,25 @@
 package me.tyalternative.matchbox.abilities.impl;
 
-import me.tyalternative.matchbox.player.PlayerData;
 import me.tyalternative.matchbox.abilities.*;
+import me.tyalternative.matchbox.player.PlayerData;
 import org.bukkit.entity.Player;
 
+public class GazAbility extends Ability {
+    public static final String ID = "gaz";
 
-public class CendreAbility extends Ability{
-
-    public static String ID = "cendre";
-
-    public CendreAbility() {
-        super(ID, "Cendre",
-                "Vous possédez une protection contre la §6Poudre de cheminée§f de §cl'Etincelle§f.",
+    public GazAbility() {
+        super(ID, "Gaz",
+                "Vous ne pouvez pas mourir §cEmbrasé§r§f.",
                 AbilityCategory.CAPACITY, AbilityUseType.PASSIVE, AbilityTrigger.AUTOMATIC);
     }
 
     @Override
     protected boolean canUse(Player player, PlayerData data, AbilityContext context) {
-        return true;
+        return false;
     }
 
     @Override
     protected AbilityResult execute(Player player, PlayerData data, AbilityContext context) {
-        return AbilityResult.success();
+        return null;
     }
-
 }

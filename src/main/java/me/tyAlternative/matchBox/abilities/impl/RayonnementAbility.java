@@ -4,11 +4,9 @@ import me.tyalternative.matchbox.abilities.*;
 import me.tyalternative.matchbox.mechanics.embrasement.EmbrasementCause;
 import me.tyalternative.matchbox.player.PlayerData;
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class RayonnementAbility extends Ability {
@@ -21,7 +19,7 @@ public class RayonnementAbility extends Ability {
     public RayonnementAbility() {
         super(ID, "Rayonnement",
                 "A chaque phase de Gameplay, le joueur étant resté le plus longtemps dans un rayon de §7x §r blocs de vous, sera éliminé à la fin de cette phase.",
-                AbilityType.PASSIVE, AbilityTrigger.TICKS, 20);
+                AbilityCategory.CAPACITY, AbilityUseType.PASSIVE, AbilityTrigger.TICKS, 20);
 
         rayonnementTarget = new HashMap<>();
     }
@@ -58,6 +56,8 @@ public class RayonnementAbility extends Ability {
     public void onGameplayPhaseEnd(Player player, PlayerData data) {
         super.onGameplayPhaseEnd(player, data);
 
+        if (isDrunk()) return;
+
         // Si rayonnement abandonné
         if (Boolean.FALSE.equals(data.getCustomData("rayonnement_actif", Boolean.class))) return;
 
@@ -76,6 +76,16 @@ public class RayonnementAbility extends Ability {
         gameManager.getEmbrasementManager().embrase(embrasedPlayerData.getPlayerId(), EmbrasementCause.TORCHE);
 
 
+    }
+
+    @Override
+    public boolean canBeDrunk() {
+        return true;
+    }
+
+    @Override
+    protected AbilityResult executeDrunk(Player player, PlayerData data, AbilityContext context) {
+        return AbilityResult.success();
     }
 
     public double getRayonnementRadius() {

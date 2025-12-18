@@ -1,6 +1,5 @@
 package me.tyalternative.matchbox.abilities.impl;
 
-import me.tyalternative.matchbox.MatchBox;
 import me.tyalternative.matchbox.mechanics.embrasement.EmbrasementCause;
 import me.tyalternative.matchbox.player.PlayerData;
 import me.tyalternative.matchbox.abilities.*;
@@ -13,7 +12,7 @@ public class EmbrasementAbility extends Ability {
     public EmbrasementAbility() {
         super(ID, "Embrasement",
                 "A chaque phase de Gameplay, vous pouvez clic droit sur un joueur avec une main vide. Ce dernier sera éliminé à la fin de cette phase.",
-                AbilityType.ACTIVE, AbilityTrigger.RIGHT_CLICK_PLAYER);
+                AbilityCategory.CAPACITY, AbilityUseType.ACTIVE, AbilityTrigger.RIGHT_CLICK_PLAYER);
 
 
         setUsageRoundLimits(1);

@@ -1,6 +1,8 @@
 package me.tyalternative.matchbox.elimination;
 
 import me.tyalternative.matchbox.abilities.Ability;
+import me.tyalternative.matchbox.abilities.AbilityContext;
+import me.tyalternative.matchbox.abilities.AbilityResult;
 import me.tyalternative.matchbox.abilities.impl.CalcineAbility;
 import me.tyalternative.matchbox.core.GameManager;
 import me.tyalternative.matchbox.events.PlayerEliminatedEvent;
@@ -35,12 +37,13 @@ public class EliminationManager {
             // Traiter les Calcinés en attente
 
             Ability ability = data.getRole().getAbility(CalcineAbility.ID);
-            if (ability instanceof CalcineAbility calcineAbility && calcineAbility.isUsed()) {
+            if (ability instanceof CalcineAbility calcineAbility && calcineAbility.wasRegistered(data)) {
                 EliminationCause cause = calcineAbility.getCause();
                 if (cause == null) cause = EliminationCause.UNKNOWN;
 
                 eliminate(data.getPlayerId(), cause);
                 calcineAbility.setUsed(false);
+                continue;
             }
 
 
@@ -54,9 +57,9 @@ public class EliminationManager {
             // Retarde les Calcinés embrasés
             ability = data.getRole().getAbility(CalcineAbility.ID);
             if (ability instanceof CalcineAbility calcineAbility) {
-                calcineAbility.setUsed(true);
-                calcineAbility.setCause(cause);
-                continue;
+                boolean registered = calcineAbility.registerEmbrasement(data, cause);
+                if (registered) continue;
+
             }
 
 

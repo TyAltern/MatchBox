@@ -21,6 +21,7 @@ public class VictoryManager {
         // Enregistrer les conditions
         registerCondition(new AllFlammesEliminatedCondition());
         registerCondition(new LastSoloStandingCondition());
+        registerCondition(new FlintAndSteelVictoryCondition());
     }
 
     public void registerCondition(VictoryCondition condition) {

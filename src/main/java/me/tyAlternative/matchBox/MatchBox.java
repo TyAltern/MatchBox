@@ -90,10 +90,15 @@ public final class MatchBox extends JavaPlugin {
         roleRegistry.register(new Etincelle());
         roleRegistry.register(new Torche());
 
+        // Flint & Steel
+        roleRegistry.register(new Silex());
+
+
         // Bâtons
         roleRegistry.register(new Souffle());
         roleRegistry.register(new Cendre());
         roleRegistry.register(new Calcine());
+        roleRegistry.register(new Gaz());
         roleRegistry.register(new Aurore());
         roleRegistry.register(new Baton());
 

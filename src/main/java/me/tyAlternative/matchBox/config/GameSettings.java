@@ -57,6 +57,8 @@ public class GameSettings {
     private int doubleSwapMaxDelayMs;
     private boolean doubleSwapCancelFirstSwap;
 
+    private List<String> amnesiaRolePickChoices;
+
     // Messages
     private String prefix;
 
@@ -113,6 +115,8 @@ public class GameSettings {
     public int getDoubleSwapMaxDelayMs() { return doubleSwapMaxDelayMs; }
     public boolean getDoubleSwapCancelFirstSwap() { return doubleSwapCancelFirstSwap; }
 
+    public List<String> getAmnesiaRolePickChoices() {return amnesiaRolePickChoices; }
+
     public String getPrefix() { return prefix; }
 
     public boolean isBossBarEnabled() { return bossBarEnabled; }
@@ -166,6 +170,9 @@ public class GameSettings {
     public void setDoubleSwapEnable(boolean doubleSwapEnable) { this.doubleSwapEnable = doubleSwapEnable; }
     public void setDoubleSwapMaxDelayMs(int doubleSwapMaxDelayMs) { this.doubleSwapMaxDelayMs = doubleSwapMaxDelayMs; }
     public void setDoubleSwapCancelFirstSwap(boolean doubleSwapCancelFirstSwap) { this.doubleSwapCancelFirstSwap = doubleSwapCancelFirstSwap; }
+
+    public void setAmnesiaRolePickChoices(List<String> amnesiaRolePickChoices) {this.amnesiaRolePickChoices = amnesiaRolePickChoices; }
+
 
     public void setPrefix(String prefix) { this.prefix = prefix; }
 

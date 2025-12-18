@@ -11,7 +11,7 @@ public class ClairvoyanceAbility extends Ability {
     public ClairvoyanceAbility() {
         super(ID, "Clairvoyance",
                 "Vous connaissez la durée restante de la phase de Gameplay en cours.",
-                AbilityType.PASSIVE, AbilityTrigger.AUTOMATIC);
+                AbilityCategory.CAPACITY, AbilityUseType.PASSIVE, AbilityTrigger.AUTOMATIC);
     }
 
     @Override

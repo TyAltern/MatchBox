@@ -14,7 +14,7 @@ public class CalcineAbility extends Ability {
     public CalcineAbility() {
         super(ID, "Calciné",
                 "Vous retardez votre §cEmbrasement§f par §cles Flammes§f d'une manche. Vous n'êtes cependant pas au courant de votre §cEmbrasement§f.",
-                AbilityType.PASSIVE, AbilityTrigger.AUTOMATIC);
+                AbilityCategory.CAPACITY, AbilityUseType.PASSIVE, AbilityTrigger.AUTOMATIC);
     }
 
     @Override
@@ -24,8 +24,32 @@ public class CalcineAbility extends Ability {
 
     @Override
     protected AbilityResult execute(Player player, PlayerData data, AbilityContext context) {
+        setUsed(true);
         return AbilityResult.success();
     }
+
+    @Override
+    protected AbilityResult executeDrunk(Player player, PlayerData data, AbilityContext context) {
+        return AbilityResult.failure("Drunk");
+    }
+
+    @Override
+    public boolean canBeDrunk() {
+        return true;
+    }
+
+    public boolean registerEmbrasement(PlayerData data, EliminationCause cause) {
+        if (isDrunk()) return false;
+        setUsed(true);
+        setCause(cause);
+        return true;
+    }
+
+    public boolean wasRegistered(PlayerData data) {
+        if (isDrunk()) return false;
+        return used;
+    }
+
 
     public EliminationCause getCause() {
         return cause;
@@ -34,9 +58,10 @@ public class CalcineAbility extends Ability {
         this.cause = cause;
     }
 
-    public boolean isUsed() {
-        return used;
-    }
+//    public boolean isUsed() {
+//        if (isDrunk()) return false;
+//        return used;
+//    }
     public void setUsed(boolean used) {
         this.used = used;
     }

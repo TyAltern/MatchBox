@@ -25,6 +25,7 @@ import me.tyalternative.matchbox.player.PlayerState;
 import me.tyalternative.matchbox.role.Role;
 import me.tyalternative.matchbox.ui.ActionBarManager;
 import me.tyalternative.matchbox.ui.BossBarManager;
+import me.tyalternative.matchbox.ui.MessageManager;
 import me.tyalternative.matchbox.ui.SoundManager;
 import me.tyalternative.matchbox.victory.VictoryManager;
 import net.kyori.adventure.text.Component;
@@ -71,6 +72,7 @@ public class GameManager {
     private final BossBarManager bossBarManager;
     private final ActionBarManager actionBarManager;
     private final SoundManager soundManager;
+    private final MessageManager messageManager;
 
     // État
     private boolean gameRunning;
@@ -106,6 +108,7 @@ public class GameManager {
         this.bossBarManager = new BossBarManager(this);
         this.actionBarManager = new ActionBarManager(this);
         this.soundManager = new SoundManager(this);
+        this.messageManager = new MessageManager(this);
 
         this.gameRunning = false;
         this.roundNumber = 0;
@@ -262,6 +265,7 @@ public class GameManager {
         // Remettre les joueurs en survie
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.setGameMode(GameMode.SURVIVAL);
+            playerManager.get(player).reset();
 
         }
 
@@ -339,6 +343,7 @@ public class GameManager {
     public BossBarManager getBossBarManager() { return bossBarManager; }
     public ActionBarManager getActionBarManager() { return actionBarManager; }
     public SoundManager getSoundManager() { return soundManager; }
+    public MessageManager getMessageManager() { return messageManager; }
 
     public boolean isGameRunning() { return gameRunning; }
     public int getRoundNumber() { return roundNumber; }

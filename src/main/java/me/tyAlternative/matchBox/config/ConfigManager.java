@@ -101,6 +101,8 @@ public class ConfigManager {
         settings.setDoubleSwapMaxDelayMs(config.getInt("abilities.double_swap_detection.max_delay_ms", 500));
         settings.setDoubleSwapCancelFirstSwap(config.getBoolean("abilities.double_swap_detection.cancel_first_swap", true));
 
+        settings.setAmnesiaRolePickChoices(config.getStringList("abilities.amnesia.targets"));
+
         // Messages
         settings.setPrefix(config.getString("messages.prefix", "§e[Boite d'Allumettes]"));
 

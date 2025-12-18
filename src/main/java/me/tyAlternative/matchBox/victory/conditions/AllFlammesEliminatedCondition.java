@@ -5,13 +5,14 @@ import me.tyalternative.matchbox.role.RoleTeam;
 import me.tyalternative.matchbox.role.RoleType;
 import me.tyalternative.matchbox.victory.VictoryCondition;
 
-public class AllFlammesEliminatedCondition  implements VictoryCondition {
+public class AllFlammesEliminatedCondition implements VictoryCondition {
 
     @Override
     public RoleTeam check(GameManager gameManager) {
         int flammeCount = gameManager.getPlayerManager().getAliveByTeam(RoleTeam.SOLITAIRE).size();
+        int flintNSteelCount = gameManager.getPlayerManager().countAliveInTeam(RoleTeam.SILEX_ACIER);
 
-        return flammeCount == 0 ? RoleTeam.BATONS : null;
+        return (flammeCount == 0 && flintNSteelCount == 0) ? RoleTeam.BATONS : null;
     }
 
     @Override

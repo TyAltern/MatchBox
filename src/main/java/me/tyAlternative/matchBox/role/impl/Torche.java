@@ -10,16 +10,19 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 public class Torche extends AbstractRole {
-    public static String ID = "TORCHE";
-    private final RayonnementAbility rayonnementAbility;
+    public static final String ID = "TORCHE";
+    public static final String DISPLAY_NAME = "§c§lLa Torche";
+    public static final String DESCRIPTION = "Être de lumière, il semble que les bâtons ne veulent pas de votre amour. Alors, embrasez les tous et gagner seul. Cela devrait leur faire changer d'avis!";
+
 
     public Torche() {
-        super(ID, "§c§lLa Torche",
-                "Être de lumière, il semble que les bâtons ne veulent pas de votre amour. Alors, embrasez les tous et gagner seul. Cela devrait leur faire changer d'avis!",
+        super(ID, DISPLAY_NAME, DESCRIPTION,
                 RoleType.FLAMME, RoleTeam.SOLITAIRE, Material.TORCH);
 
-        rayonnementAbility = (RayonnementAbility) registerAbility(new RayonnementAbility());
+        registerAbility(new RayonnementAbility());
         registerAbility(new EtouffementDeFlammeAbility());
     }
 

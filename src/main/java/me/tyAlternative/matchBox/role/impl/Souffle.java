@@ -9,13 +9,16 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 public class Souffle extends AbstractRole {
 
-    public static String ID = "SOUFFLE";
+    public static final String ID = "SOUFFLE";
+    public static final String DISPLAY_NAME = "§b§lLe Souffle";
+    public static final String DESCRIPTION = "Vous êtes l'allié le plus fort pour contrer §cles Flammes§f. Eliminez §cles Flammes§f et gagnez avec les autres §eBâtons§f.";
 
     public Souffle() {
-        super(ID, "§b§lLe Souffle",
-                "Vous êtes l'allié le plus fort pour contrer §cles Flammes§f. Eliminez §cles Flammes§f et gagnez avec les autres §eBâtons§f.",
+        super(ID, DISPLAY_NAME, DESCRIPTION,
                 RoleType.BATON, RoleTeam.BATONS, Material.WIND_CHARGE);
 
 

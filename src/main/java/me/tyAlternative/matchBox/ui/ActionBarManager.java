@@ -1,7 +1,6 @@
 package me.tyalternative.matchbox.ui;
 
-import me.tyalternative.matchbox.MatchBox;
-import me.tyalternative.matchbox.abilities.AbilityType;
+import me.tyalternative.matchbox.abilities.AbilityUseType;
 import me.tyalternative.matchbox.abilities.CooldownManager;
 import me.tyalternative.matchbox.core.GameManager;
 import me.tyalternative.matchbox.player.PlayerData;
@@ -70,17 +69,19 @@ public class ActionBarManager {
     private String buildActionBarMessage(Player player, PlayerData data) {
         List<String> parts = new ArrayList<>();
 
-        // Informations de base
-        parts.add("§7Manche " + gameManager.getRoundNumber());
+        return "§7Manche " + gameManager.getRoundNumber();
 
-        // Cooldowns des capacités
-        if (gameManager.getSettings().shouldShowCooldowns()) {
-            List<String> cooldownParts = buildCooldownInfo(player, data);
-            if (!cooldownParts.isEmpty()) parts.addAll(cooldownParts);
-        }
-
-        // Joindre avec un séparateur
-        return String.join (" §8•§7 ", parts);
+//        // Informations de base
+//        parts.add("§7Manche " + gameManager.getRoundNumber());
+//
+//        // Cooldowns des capacités
+//        if (gameManager.getSettings().shouldShowCooldowns()) {
+//            List<String> cooldownParts = buildCooldownInfo(player, data);
+//            if (!cooldownParts.isEmpty()) parts.addAll(cooldownParts);
+//        }
+//
+//        // Joindre avec un séparateur
+//        return String.join (" §8•§7 ", parts);
     }
 
 
@@ -93,7 +94,7 @@ public class ActionBarManager {
 
         for (Ability ability : data.getRole().getAbilities()) {
             // Ignore les capacités passives
-            if (ability.getType() == AbilityType.PASSIVE) continue;
+            if (ability.getType() == AbilityUseType.PASSIVE) continue;
 
             String cooldownInfo = getCooldownInfo(player.getUniqueId(), ability);
             cooldowns.add(cooldownInfo);

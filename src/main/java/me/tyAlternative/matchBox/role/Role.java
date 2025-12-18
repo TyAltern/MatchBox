@@ -20,6 +20,9 @@ public interface Role {
     Material getGuiIcon();
 
     void setTeam(RoleTeam team);
+    public Ability registerAbility(Ability ability);
+    public Ability registerHiddenAbility(Ability ability);
+    public Ability registerDrunkAbility(Ability ability);
 
     // Capacités
     List<Ability> getAbilities();

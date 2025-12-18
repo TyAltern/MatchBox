@@ -1,6 +1,6 @@
 package me.tyalternative.matchbox.abilities;
 
-public enum AbilityType {
+public enum AbilityUseType {
 
     /** Capacité active nécessitant une action du joueur */
     ACTIVE("Actif"),
@@ -16,7 +16,7 @@ public enum AbilityType {
 
     private String displayName;
 
-    AbilityType(String displayName) {
+    AbilityUseType(String displayName) {
         this.displayName = displayName;
     }
 

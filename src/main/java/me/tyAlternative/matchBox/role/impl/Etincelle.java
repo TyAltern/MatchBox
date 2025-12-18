@@ -13,13 +13,16 @@ import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 public class Etincelle extends AbstractRole {
 
-    public static String ID = "ETINCELLE";
+    public static final String ID = "ETINCELLE";
+    public static final String DISPLAY_NAME = "§c§lL'Étincelle";
+    public static final String DESCRIPTION = "Vous êtes le traître de la partie. Embrasez tous les autres §eBâtons§f et gagner seul.";
 
     public Etincelle() {
-        super(ID, "§c§nL'Étincelle",
-                "Vous êtes le traître de la partie. Embrasez tous les autres §eBâtons§f et gagner seul.",
+        super(ID, DISPLAY_NAME, DESCRIPTION,
                 RoleType.FLAMME, RoleTeam.SOLITAIRE, Material.BLAZE_POWDER);
 
         registerAbility(new EmbrasementAbility());

@@ -16,8 +16,10 @@ public abstract class Ability {
     protected final String name;
     protected final String description;
     protected boolean hasCooldown;
-    protected final AbilityType type;
+    protected final AbilityCategory category;
+    protected final AbilityUseType type;
     protected final AbilityTrigger trigger;
+    protected boolean invisible;
 
     protected boolean isDrunk;
 
@@ -27,13 +29,15 @@ public abstract class Ability {
     protected UsageLimit perRoundLimit;
     protected UsageLimit perGameLimit;
 
-    public Ability(String id, String name, String description, AbilityType type, AbilityTrigger trigger) {
+
+    public Ability(String id, String name, String description, AbilityCategory category, AbilityUseType type, AbilityTrigger trigger) {
 
         this.gameManager = MatchBox.getInstance().getGameManager();
 
         this.id = id;
         this.name = name;
         this.description = description;
+        this.category = category;
         this.type = type;
         this.trigger = trigger;
 
@@ -43,13 +47,14 @@ public abstract class Ability {
 
     }
 
-    public Ability(String id, String name, String description, AbilityType type, AbilityTrigger trigger, int ticks) {
+    public Ability(String id, String name, String description, AbilityCategory category, AbilityUseType type, AbilityTrigger trigger, int ticks) {
 
         this.gameManager = MatchBox.getInstance().getGameManager();
 
         this.id = id;
         this.name = name;
         this.description = description;
+        this.category = category;
         this.type = type;
         this.trigger = trigger;
 
@@ -92,7 +97,7 @@ public abstract class Ability {
     // ========== DRUNK MANAGEMENT ==========
 
     protected AbilityResult executeDrunk(Player player, PlayerData data, AbilityContext context) {
-        return execute(player, data, context);
+        return AbilityResult.success();
     }
     /**
      * Définit si la capacité peut être fausse. Par défaut retourne False. Override si ce n'est pas le cas.
@@ -109,6 +114,13 @@ public abstract class Ability {
         this.isDrunk = isDrunk;
     }
 
+
+    public void setInvisible(boolean invisible) {
+        this.invisible = invisible;
+    }
+    public boolean isInvisible() {
+        return this.invisible;
+    }
 
 
     /**
@@ -171,17 +183,18 @@ public abstract class Ability {
     }
 
     // Getters
-    public String getId() { return id; }
-    public String getName() { return name; }
-    public String getDescription() { return description; }
-    public boolean hasCooldown() { return hasCooldown; }
-    public AbilityType getType() { return type; }
-    public AbilityTrigger getTrigger() { return trigger; }
+    public String getId() { return this.id; }
+    public String getName() { return this.name; }
+    public String getDescription() { return this.description; }
+    public boolean hasCooldown() { return this.hasCooldown; }
+    public AbilityCategory getCategory() { return this.category; }
+    public AbilityUseType getType() { return this.type; }
+    public AbilityTrigger getTrigger() { return this.trigger; }
 
-    public int getTicks() { return ticks; }
+    public int getTicks() { return this.ticks; }
 
-    public UsageLimit getPerRoundLimit() { return perRoundLimit; }
-    public UsageLimit getPerGameLimit() { return perGameLimit; }
+    public UsageLimit getPerRoundLimit() { return this.perRoundLimit; }
+    public UsageLimit getPerGameLimit() { return this.perGameLimit; }
 
     public boolean hasUsageLimit() {
         return (perRoundLimit != null && !perRoundLimit.isUnlimited()) ||
